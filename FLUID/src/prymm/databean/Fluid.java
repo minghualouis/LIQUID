@@ -1,7 +1,6 @@
 package prymm.databean;
 
 import prymm.control.UsrDataConfig;
-import prymm.control.UsrDataProcessor;
 
 /**
  * Fluid initialization including type, viscosity
@@ -25,17 +24,20 @@ public class Fluid {
 	/**
 	 * Constructor by Fluid type 
 	 */
-	public Fluid(String fluidType)
+	private double temperature;
+	
+	public Fluid(String fluidType, double temperature)
 	{
 		this.type = fluidType;
+		this.temperature = temperature;
 		// check the type of the fluid
 		if ("Water".equalsIgnoreCase(fluidType)) 
 		{
-			this.viscosity = 0.02d;
+			this.viscosity = 1.790*Math.exp((-1230-temperature)*temperature/(36100+360*temperature));
 		}
 		else if ("Glycerin".equalsIgnoreCase(fluidType)) 
 		{
-			this.viscosity = 0.03d;
+			this.viscosity = 12100*Math.exp((-1233+temperature)*temperature/(9900+70*temperature)); ;
 		}
 		else
 		{
@@ -56,6 +58,14 @@ public class Fluid {
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	public double getTemperature() {
+		return temperature;
+	}
+
+	public void setTemperature(double temperature) {
+		this.temperature = temperature;
 	}
 	
 	

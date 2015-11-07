@@ -2,6 +2,11 @@ package prymm.control;
 
 import prymm.databean.SingleDrop;
 
+/**
+ * Barrier class for setting range for all drops as per the shape of the barrier
+ * @author Minghua
+ *
+ */
 public class Barrier
 {
 	private String shape;

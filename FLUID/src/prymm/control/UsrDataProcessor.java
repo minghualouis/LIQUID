@@ -27,9 +27,9 @@ public class UsrDataProcessor
 		
 		int xDim = dataConfig.getLength(); // first parameter of flow
 		int yDim = dataConfig.getWidth(); // second parameter of flow
-		
+		double temperature = Double.valueOf(dataConfig.getTemperature());
 		// initialize the fluid with user configuration
-		Fluid fluidObj = new Fluid(dataConfig.getFluidType());
+		Fluid fluidObj = new Fluid(dataConfig.getFluidType(), temperature);
 		
 		// create flow with basic configuration
 		Flow flow = new Flow(xDim, yDim, fluidObj);
