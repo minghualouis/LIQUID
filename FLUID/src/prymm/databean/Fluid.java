@@ -1,5 +1,8 @@
 package prymm.databean;
 
+import prymm.control.UsrDataConfig;
+import prymm.control.UsrDataProcessor;
+
 /**
  * Fluid initialization including type, viscosity
  * @author Minghua
@@ -28,16 +31,17 @@ public class Fluid {
 		// check the type of the fluid
 		if ("Water".equalsIgnoreCase(fluidType)) 
 		{
-			this.viscosity = ;
+			this.viscosity = 0.02d;
 		}
 		else if ("Glycerin".equalsIgnoreCase(fluidType)) 
 		{
-			this.viscosity = ;
+			this.viscosity = 0.03d;
 		}
 		else
 		{
 			// get the value configured by user for viscosity
-			
+			String viscosityText = UsrDataConfig.getUsrDataConfig().getViscosity();
+			this.viscosity = Double.valueOf(viscosityText);
 		}
 	}
 	

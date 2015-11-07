@@ -1,5 +1,6 @@
 package prymm.databean;
 
-class SingleDot {
-
+class SingleDot 
+{
+	
 }

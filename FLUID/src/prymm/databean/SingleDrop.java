@@ -17,13 +17,8 @@ public class SingleDrop
 	 * Density for the current drop
 	 */
 	private double density;
-	
-	/**
-	 * Temperature of the fluid
-	 * @return
-	 */
-	private double temperature;
-	
+
+	private SingleDot[][] dots = new SingleDot[3][3];
 
 	public double getxVel() {
 		return xVel;
@@ -47,6 +42,14 @@ public class SingleDrop
 
 	public void setDensity(double density) {
 		this.density = density;
+	}
+
+	public SingleDot[][] getDots() {
+		return dots;
+	}
+
+	public void setDots(SingleDot[][] dots) {
+		this.dots = dots;
 	}
 	
 	

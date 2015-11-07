@@ -7,7 +7,8 @@ package prymm.control;
  */
 public class UsrDataConfig
 {
-	static int totalNumber = 0;
+	private static int totalNumber = 0;
+	private static UsrDataConfig usrdata = new UsrDataConfig();
 	
 	private String fluidType;
 	private String viscosity;
@@ -18,6 +19,10 @@ public class UsrDataConfig
 	private String containerSize;
 	private boolean isEntryAdded;
 	private boolean isExitAdded;
+	private int length;
+	private int width;
+	
+	
 	
 	/**
 	 * Singleton pattern used here, to retrieve only a UsrDataConfig
@@ -25,13 +30,12 @@ public class UsrDataConfig
 	 */
 	public static UsrDataConfig getUsrDataConfig()
 	{
-		UsrDataConfig usrdata;
-		if (totalNumber == 0) 
+		if (totalNumber != 0) 
 		{
-			usrdata = new UsrDataConfig();
 			return usrdata;
 		}
 		else {
+			usrdata = new UsrDataConfig();
 			return usrdata;
 		}
 	}
@@ -44,6 +48,13 @@ public class UsrDataConfig
 		totalNumber++;
 	}
 	
+	public void setSize()
+	{
+		String containerSize =  this.getContainerSize();
+		String[] sizeText = containerSize.split("x");
+		this.setLength(Integer.valueOf(sizeText[0]));
+		this.setWidth(Integer.valueOf(sizeText[1]));
+	}
 	
 	public String getFluidType() {
 		return fluidType;
@@ -98,6 +109,22 @@ public class UsrDataConfig
 	}
 	public void setExitAdded(boolean isExitAdded) {
 		this.isExitAdded = isExitAdded;
+	}
+
+	public int getLength() {
+		return length;
+	}
+
+	public void setLength(int length) {
+		this.length = length;
+	}
+
+	public int getWidth() {
+		return width;
+	}
+
+	public void setWidth(int width) {
+		this.width = width;
 	}
 	
 	
