@@ -30,10 +30,18 @@ public class Barrier
 		if (shape.equals("Circular")) 
 		{
 			// set velocity of related single drops to zero
+			int xCenter = UsrDataConfig.getUsrDataConfig().getLength() / 2;
+			int yCenter = UsrDataConfig.getUsrDataConfig().getWidth() / 2;
+			SingleDrop center = allDrops2[xCenter][yCenter];
+			center.disableDrop();
+			int radius = 3; // set radius for circular barrier
+			
+			
 		}
 		else if (shape.equals("Rectangular")) 
 		{
 			// set velcocity of related single drops to zero
+			
 		}
 	}
 	

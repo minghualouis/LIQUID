@@ -17,6 +17,30 @@ public class SingleDrop
 	 * Density for the current drop
 	 */
 	private double density;
+	
+	/**
+	 * Used for checking if a single drop is a barrier or not
+	 */
+	private boolean isEnable;
+	
+	
+	/**
+	 * disable the drop, used for setting barrier
+	 */
+	public void disableDrop()
+	{
+		this.setDensity(0);
+		this.setxVel(0);
+		this.setyVel(0);
+	}
+	
+	public boolean isEnable() {
+		return isEnable;
+	}
+
+	public void setEnable(boolean isEnable) {
+		this.isEnable = isEnable;
+	}
 
 	private SingleDot[][] dots = new SingleDot[3][3];
 

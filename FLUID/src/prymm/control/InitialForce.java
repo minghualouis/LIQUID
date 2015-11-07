@@ -10,9 +10,9 @@ public class InitialForce {
 		// if user configure the water or glycerin, default speed will be used
 		String speedText = UsrDataConfig.getUsrDataConfig().getInitialSpeed();
 		double speed = Double.valueOf(speedText);
-		if (!UsrDataConfig.getUsrDataConfig().getFluidType().equals("User Defined")) {
-			speed = 110;
-		}
+//		if (!UsrDataConfig.getUsrDataConfig().getFluidType().equals("User Defined")) {
+//			speed = 110;
+//		}
 		switch (direction) 
 		{
 		case Flow.LEFT:
