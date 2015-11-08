@@ -21,8 +21,8 @@ public class Flow
 	/**
 	 * Container size defined by user. 
 	 */
-	private int xDim;
-	private int yDim;
+	private int xDim; // column length in array
+	private int yDim; // row length in array
 	
 	/**
 	 * All the points for simulate fluid, store values of each drop
@@ -58,7 +58,8 @@ public class Flow
 	{
 		int xdim = this.getxDim();
 		int ydim = this.getyDim();
-		allDrops = new SingleDrop[xdim][ydim];
+		// length defined by user is the ydim of the array
+		allDrops = new SingleDrop[ydim][xdim];
 		setInitialForce(allDrops);
 	}
 

@@ -29,7 +29,8 @@ public class SingleDrop
 	 */
 	public void disableDrop()
 	{
-		this.setDensity(0);
+		// Default setting for single drops
+		this.setDensity(1);
 		this.setxVel(0);
 		this.setyVel(0);
 	}

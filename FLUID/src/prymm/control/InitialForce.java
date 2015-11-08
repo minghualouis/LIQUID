@@ -5,6 +5,11 @@ import prymm.databean.SingleDrop;
 
 public class InitialForce {
 
+	/**
+	 * Set initial force as per the direction and update all single drops within
+	 * @param allDrops2
+	 * @param direction
+	 */
 	public static void initialForce(SingleDrop[][] allDrops2, int direction)
 	{
 		// if user configure the water or glycerin, default speed will be used
@@ -16,40 +21,33 @@ public class InitialForce {
 		switch (direction) 
 		{
 		case Flow.LEFT:
-			for (int i = 0; i < allDrops2.length; i++) 
+			for (int i = 0; i < allDrops2[0].length; i++) 
 			{
-				allDrops2[i][0].setxVel(speed);
-				allDrops2[i][0].setyVel(0);
-				allDrops2[i][0].setDensity(1);
+				allDrops2[0][i].setxVel(speed);
 			}
 			break;
 			
 		case Flow.RIGHT:
-			int lastCol = allDrops2[0].length - 1;
-			for (int i = 0; i < allDrops2.length; i++) 
+			int length = allDrops2.length - 1;
+			for (int i = 0; i < allDrops2[0].length; i++) 
 			{
-				allDrops2[i][lastCol].setxVel(-speed);
-				allDrops2[i][lastCol].setyVel(0);
-				allDrops2[i][lastCol].setDensity(1);
+				allDrops2[length][i].setxVel(-speed);
 			}
 			break;
 
 		case Flow.TOP:
-			for (int i = 0; i < allDrops2[0].length; i++) 
+			int length1 = allDrops2.length - 1;
+			int width = allDrops2[0].length;
+			for (int i = 0; i < length1; i++) 
 			{
-				allDrops2[0][i].setxVel(0);
-				allDrops2[0][i].setyVel(speed);
-				allDrops2[0][i].setDensity(1);
+				allDrops2[i][width].setyVel(speed);
 			}
 			break;
 
 		case Flow.BOTTOM:
-			int lastRow = allDrops2.length - 1;
 			for (int i = 0; i < allDrops2.length; i++) 
 			{
-				allDrops2[lastRow][i].setxVel(0);
-				allDrops2[lastRow][i].setyVel(-speed);
-				allDrops2[lastRow][i].setDensity(1);
+				allDrops2[i][0].setyVel(-speed);
 			}
 			break;
 		default:
@@ -76,64 +74,46 @@ public class InitialForce {
 		case Flow.LEFT:
 			// let pipe entry be 20% of the width 
 
-			for (int i = 0; i < upperSize; i++) 
+			for (int i = width - 1; i >= upperSize; i--) 
 			{
-				allDrops2[i][0].setxVel(0);
-				allDrops2[i][0].setyVel(0);
-				allDrops2[i][0].setDensity(0);
+				allDrops2[0][i].disableDrop();
 			}
-			for (int i = downSize; i < allDrops2.length; i++) 
+			for (int i = downSize; i >= 0; i--) 
 			{
-				allDrops2[i][0].setxVel(0);
-				allDrops2[i][0].setyVel(0);
-				allDrops2[i][0].setDensity(0);
+				allDrops2[0][i].disableDrop();
 			}
 			break;
 			
 		case Flow.RIGHT:
-			int lastCol = allDrops2[0].length - 1;
-			for (int i = 0; i < upperSize; i++) 
+			for (int i = width - 1; i >= upperSize; i--) 
 			{
-				allDrops2[i][lastCol].setxVel(0);
-				allDrops2[i][lastCol].setyVel(0);
-				allDrops2[i][lastCol].setDensity(0);
+				allDrops2[length - 1][i].disableDrop();
 			}
-			for (int i = downSize; i < allDrops2.length; i++) 
+			for (int i = downSize; i >= 0; i--) 
 			{
-				allDrops2[i][lastCol].setxVel(0);
-				allDrops2[i][lastCol].setyVel(0);
-				allDrops2[i][lastCol].setDensity(0);
+				allDrops2[length - 1][i].disableDrop();
 			}
 			break;
 
 		case Flow.TOP:
 			for (int i = 0; i < leftSize; i++) 
 			{
-				allDrops2[0][i].setxVel(0);
-				allDrops2[0][i].setyVel(0);
-				allDrops2[0][i].setDensity(0);
+				allDrops2[i][width - 1].disableDrop();
 			}
-			for (int i = rightSize; i < allDrops2[0].length; i++) 
+			for (int i = rightSize; i < length - 1; i++) 
 			{
-				allDrops2[0][i].setxVel(0);
-				allDrops2[0][i].setyVel(0);
-				allDrops2[0][i].setDensity(0);
+				allDrops2[i][width - 1].disableDrop();
 			}
 			break;
 
 		case Flow.BOTTOM:
-			int lastRow = allDrops2.length - 1;
 			for (int i = 0; i < leftSize; i++) 
 			{
-				allDrops2[lastRow][i].setxVel(0);
-				allDrops2[lastRow][i].setyVel(0);
-				allDrops2[lastRow][i].setDensity(0);
+				allDrops2[i][0].disableDrop();
 			}
-			for (int i = rightSize; i < allDrops2[0].length; i++) 
+			for (int i = rightSize; i < length - 1; i++) 
 			{
-				allDrops2[lastRow][i].setxVel(0);
-				allDrops2[lastRow][i].setyVel(0);
-				allDrops2[lastRow][i].setDensity(0);
+				allDrops2[i][0].disableDrop();
 			}
 			break;
 		default:
@@ -158,66 +138,48 @@ public class InitialForce {
 		switch (direction) 
 		{
 		case Flow.LEFT:
-			int lastCol = allDrops2[0].length - 1;
-			for (int i = 0; i < upperSize; i++) 
+			for (int i = width - 1; i >= upperSize; i--) 
 			{
-				allDrops2[i][lastCol].setxVel(0);
-				allDrops2[i][lastCol].setyVel(0);
-				allDrops2[i][lastCol].setDensity(0);
+				allDrops2[length - 1][i].disableDrop();
 			}
-			for (int i = downSize; i < allDrops2.length; i++) 
+			for (int i = downSize; i >= 0; i--) 
 			{
-				allDrops2[i][lastCol].setxVel(0);
-				allDrops2[i][lastCol].setyVel(0);
-				allDrops2[i][lastCol].setDensity(0);
+				allDrops2[length - 1][i].disableDrop();
 			}
 			break;
 			
 		case Flow.RIGHT:
 			// let pipe entry be 20% of the width 
 
-			for (int i = 0; i < upperSize; i++) 
+			for (int i = width - 1; i >= upperSize; i--) 
 			{
-				allDrops2[i][0].setxVel(0);
-				allDrops2[i][0].setyVel(0);
-				allDrops2[i][0].setDensity(0);
+				allDrops2[0][i].disableDrop();
 			}
-			for (int i = downSize; i < allDrops2.length; i++) 
+			for (int i = downSize; i >= 0; i--) 
 			{
-				allDrops2[i][0].setxVel(0);
-				allDrops2[i][0].setyVel(0);
-				allDrops2[i][0].setDensity(0);
+				allDrops2[0][i].disableDrop();
 			}
 			break;
 
 		case Flow.TOP:
-			int lastRow = allDrops2.length - 1;
 			for (int i = 0; i < leftSize; i++) 
 			{
-				allDrops2[lastRow][i].setxVel(0);
-				allDrops2[lastRow][i].setyVel(0);
-				allDrops2[lastRow][i].setDensity(0);
+				allDrops2[i][0].disableDrop();
 			}
-			for (int i = rightSize; i < allDrops2[0].length; i++) 
+			for (int i = rightSize; i < length - 1; i++) 
 			{
-				allDrops2[lastRow][i].setxVel(0);
-				allDrops2[lastRow][i].setyVel(0);
-				allDrops2[lastRow][i].setDensity(0);
+				allDrops2[i][0].disableDrop();
 			}
 			break;
 
 		case Flow.BOTTOM:
 			for (int i = 0; i < leftSize; i++) 
 			{
-				allDrops2[0][i].setxVel(0);
-				allDrops2[0][i].setyVel(0);
-				allDrops2[0][i].setDensity(0);
+				allDrops2[i][width - 1].disableDrop();
 			}
-			for (int i = rightSize; i < allDrops2[0].length; i++) 
+			for (int i = rightSize; i < length - 1; i++) 
 			{
-				allDrops2[0][i].setxVel(0);
-				allDrops2[0][i].setyVel(0);
-				allDrops2[0][i].setDensity(0);
+				allDrops2[i][width - 1].disableDrop();
 			}
 			break;
 		default:
