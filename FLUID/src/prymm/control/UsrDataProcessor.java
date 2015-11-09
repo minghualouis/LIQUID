@@ -33,7 +33,7 @@ public class UsrDataProcessor
 		StateController.setCurrentState(StateController.RUNNING);
 		RenderingMachine rm = new RenderingMachine(currentFlow);
 		Thread calculationThread = new Thread(rm);
-		calculationThread.start();		
+		calculationThread.start();
 	}
 
 	private static Flow initializeFlow(UsrDataConfig dataConfig)

@@ -23,6 +23,11 @@ public class SingleDrop
 	 */
 	private boolean isEnable;
 	
+	/**
+	 * For nine dots needed for calculating each lattice(single drop)
+	 */
+	private SingleDot[][] dots = new SingleDot[3][3];
+	
 	
 	/**
 	 * disable the drop, used for setting barrier
@@ -43,7 +48,7 @@ public class SingleDrop
 		this.isEnable = isEnable;
 	}
 
-	private SingleDot[][] dots = new SingleDot[3][3];
+	
 
 	public double getxVel() {
 		return xVel;
