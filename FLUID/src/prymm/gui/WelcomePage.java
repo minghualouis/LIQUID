@@ -1,10 +1,11 @@
 package prymm.gui;
 /**Testing**/
+import java.io.File;
+
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.layout.FormLayout;
@@ -19,10 +20,19 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.FileDialog;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Scale;
 import org.eclipse.swt.widgets.Slider;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+
+import prymm.control.UsrDataConfig;
 
 public class WelcomePage {
+	
+	private static boolean isReplay = false;
+	private static String replayFileName = "";
 
 	protected Shell shlFluidDynamicSimulation;
 
@@ -79,18 +89,18 @@ public class WelcomePage {
 		grpControlPanel.setText("Control Panel");
 		grpControlPanel.setBounds(0, 0, 70, 82);
 		
-		Button btnNewButton = new Button(grpControlPanel, SWT.NONE);
-		btnNewButton.setLayoutData(new RowData(100, SWT.DEFAULT));
-		btnNewButton.setText("Run");
+		Button runButton = new Button(grpControlPanel, SWT.NONE);
+		runButton.setLayoutData(new RowData(100, SWT.DEFAULT));
+		runButton.setText("Run");
 		
-		Button btnNewButton_1 = new Button(grpControlPanel, SWT.NONE);
-		btnNewButton_1.setEnabled(false);
-		btnNewButton_1.setLayoutData(new RowData(100, SWT.DEFAULT));
-		btnNewButton_1.setText("Stop");
+		Button stopButton = new Button(grpControlPanel, SWT.NONE);
+		stopButton.setEnabled(false);
+		stopButton.setLayoutData(new RowData(100, SWT.DEFAULT));
+		stopButton.setText("Stop");
 		
-		Button btnNewButton_2 = new Button(grpControlPanel, SWT.NONE);
-		btnNewButton_2.setLayoutData(new RowData(100, SWT.DEFAULT));
-		btnNewButton_2.setText("Reset");
+		Button resetButton = new Button(grpControlPanel, SWT.NONE);
+		resetButton.setLayoutData(new RowData(100, SWT.DEFAULT));
+		resetButton.setText("Reset");
 		
 		Group grpFluidSettings = new Group(userControlComp, SWT.NONE);
 		grpFluidSettings.setLayout(new GridLayout(6, false));
@@ -113,43 +123,48 @@ public class WelcomePage {
 		lblViscosity.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		lblViscosity.setText("Viscosity");
 		
-		Scale scale = new Scale(grpFluidSettings, SWT.NONE);
-		scale.setEnabled(false);
-		GridData gd_scale = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
-		gd_scale.widthHint = 127;
-		scale.setLayoutData(gd_scale);
+		Scale viscosityScale = new Scale(grpFluidSettings, SWT.NONE);
+		viscosityScale.setToolTipText("fluid viscosity");
+		viscosityScale.setEnabled(false);
+		GridData gd_viscosityScale = new GridData(SWT.LEFT, SWT.CENTER, false, false, 1, 1);
+		gd_viscosityScale.widthHint = 127;
+		viscosityScale.setLayoutData(gd_viscosityScale);
 		
 		Label lblTemperature = new Label(grpFluidSettings, SWT.NONE);
 		lblTemperature.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblTemperature.setText("Temperature");
 		
-		Scale scale_1 = new Scale(grpFluidSettings, SWT.NONE);
-		scale_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		Scale tempScale = new Scale(grpFluidSettings, SWT.NONE);
+
+		tempScale.setToolTipText("fluid temperature");
+		tempScale.setSelection(50);
+		tempScale.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
-		Combo combo = new Combo(grpFluidSettings, SWT.NONE);
-		combo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		combo.setItems(new String[] {"Rectangular", "Circular"});
-		combo.setBounds(0, 0, 91, 23);
-		combo.setText("Barrier Shape");
+		Combo barrierShape = new Combo(grpFluidSettings, SWT.NONE);
+		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
+		barrierShape.setItems(new String[] {"Rectangular", "Circular"});
+		barrierShape.setBounds(0, 0, 91, 23);
+		barrierShape.setText("Barrier Shape");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
-		Combo combo_2 = new Combo(grpFluidSettings, SWT.NONE);
-		combo_2.setItems(new String[] {"Right", "Top", "Bottom"});
-		combo_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		combo_2.setText("Initial Force");
+		Combo initialForceDirection = new Combo(grpFluidSettings, SWT.NONE);
+		initialForceDirection.setItems(new String[] {"Right", "Top", "Bottom"});
+		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		initialForceDirection.setText("Initial Force");
 		
 		Label lblInitialSpeed = new Label(grpFluidSettings, SWT.NONE);
 		lblInitialSpeed.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		lblInitialSpeed.setText("Initial Speed");
 		
-		Scale scale_2 = new Scale(grpFluidSettings, SWT.NONE);
+		Scale speedScale = new Scale(grpFluidSettings, SWT.NONE);
+		speedScale.setToolTipText("fluid initial speed");
 		
-		Combo combo_1 = new Combo(grpFluidSettings, SWT.NONE);
-		combo_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		combo_1.setItems(new String[] {"200 x 80", "300 x 120", "600 x 240"});
-		combo_1.setBounds(0, 0, 91, 23);
-		combo_1.setText("Container Size");
+		Combo containerSize = new Combo(grpFluidSettings, SWT.NONE);
+		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
+		containerSize.setItems(new String[] {"200 x 80", "300 x 120", "600 x 240"});
+		containerSize.setBounds(0, 0, 91, 23);
+		containerSize.setText("Container Size");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
@@ -173,19 +188,149 @@ public class WelcomePage {
 		new Label(grpLogReplay, SWT.NONE);
 		new Label(grpLogReplay, SWT.NONE);
 		
-		Button btnNewButton_3 = new Button(grpLogReplay, SWT.NONE);
-		btnNewButton_3.setEnabled(false);
-		btnNewButton_3.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		btnNewButton_3.setText("Get Log");
+		Button getLogButton = new Button(grpLogReplay, SWT.NONE);
+		getLogButton.setEnabled(false);
+		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		getLogButton.setText("Get Log");
 		
 		Button btnReplay = new Button(grpLogReplay, SWT.CHECK);
+
 		btnReplay.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
 		btnReplay.setText("Replay?");
 		
 		Button btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
+
 		btnBrowseFile.setEnabled(false);
 		btnBrowseFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		btnBrowseFile.setText("Browse File");
 
+		
+		
+		/**
+		 * Event define area
+		 */
+		
+		
+		/**
+		 * Begin to run the application
+		 * 1. get current value configured by user and use UsrDataConfig interface to create user config data object
+		 * 2. change the properties of other widgets
+		 * 3. change its-self to pause
+		 */
+		runButton.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				if(isReplay == false)
+				{
+					UsrDataConfig usrcDataConfig = UsrDataConfig.getUsrDataConfig();
+					// barrier setting
+					usrcDataConfig.setBarrierShape(barrierShape.getText());
+					// container size setting
+					usrcDataConfig.setContainerSize(containerSize.getText());
+					// pipe entry selected?
+					usrcDataConfig.setEntryAdded(btnAddPipeEntry.getSelection());
+					// pipe exit selected?
+					usrcDataConfig.setExitAdded(btnAddPipeExit.getSelection());
+					// fluid type
+					String fluidType = comboFluidType.getText();
+					usrcDataConfig.setFluidType(fluidType);
+					// set user defined viscosity if user 
+					if ("User Defined".equals(fluidType) && viscosityScale.isEnabled()) 
+					{
+						usrcDataConfig.setViscosity(String.valueOf(viscosityScale.getSelection()));
+					}
+					usrcDataConfig.setInitialForce(String.valueOf(initialForceDirection.getText()));
+					usrcDataConfig.setInitialSpeed(String.valueOf(speedScale.getSelection()));
+					usrcDataConfig.setTemperature(String.valueOf(tempScale.getSelection()));
+				}
+				// for replay
+				else
+				{
+					if (!"".equals(replayFileName)) 
+					{
+						File replayFile = new File(replayFileName);
+						if (replayFile.exists()) 
+						{
+//							use log file for replay
+						}
+					}
+				}
+			}
+		});
+		
+		/**
+		 * Check temperature according to the type of fluid that user configured
+		 */
+		tempScale.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				String fluidType = comboFluidType.getText();
+				if ("Water".equals(fluidType)) 
+				{
+					if (tempScale.getSelection() <= 0 || tempScale.getSelection() > 100) 
+					{
+						MessageBox messageBox = new MessageBox(shlFluidDynamicSimulation, SWT.ICON_ERROR);
+						messageBox.setMessage("Temperature should not be configured below 0 for fluid water");
+						int rc = messageBox.open();
+						switch (rc) {
+						case SWT.OK:
+							tempScale.setSelection(50);
+							break;
+
+						default:
+							tempScale.setSelection(50);
+							break;
+						}
+						
+					}
+				}
+			}
+		});
+		
+		
+		/**
+		 * Replay button event definition
+		 */
+		btnReplay.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				boolean replay = btnReplay.getSelection();
+				if (replay) 
+				{
+					btnBrowseFile.setEnabled(true);
+				}
+				else {
+					btnBrowseFile.setEnabled(false);
+				}
+				
+			}
+		});
+		
+		/**
+		 * If replay is enabled, create file chooser for user to select imported file
+		 */
+		btnBrowseFile.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				if (btnBrowseFile.isEnabled())
+				{
+					FileDialog fileChooser = new FileDialog(shlFluidDynamicSimulation, SWT.OpenDocument);
+					String resultFile = fileChooser.open();
+					if (resultFile != null) 
+					{
+						isReplay = true;
+						replayFileName = resultFile;
+					}
+				}
+			}
+		});
 	}
 }
