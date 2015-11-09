@@ -28,6 +28,8 @@ import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
 import prymm.control.UsrDataConfig;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.PaintEvent;
 
 public class WelcomePage {
 	
@@ -75,6 +77,10 @@ public class WelcomePage {
 		shlFluidDynamicSimulation.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		Composite fluidDisplayComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
+		
+		Canvas canvas = new Canvas(fluidDisplayComp, SWT.NONE);
+
+		canvas.setBounds(0, 0, 659, 290);
 		
 		Composite userControlComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		userControlComp.setLayout(new GridLayout(1, false));
@@ -332,5 +338,7 @@ public class WelcomePage {
 				}
 			}
 		});
+		
+		
 	}
 }
