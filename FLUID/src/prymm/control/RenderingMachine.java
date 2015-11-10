@@ -32,11 +32,5 @@ public class RenderingMachine implements Runnable{
 		this.doingCalculation();
 	}
 	
-	/**
-	 * need to fix the bug, boss commands
-	 */
-	public void bugfix()
-	{
-		System.out.println("fixing the bug");	
-	}
+
 }
