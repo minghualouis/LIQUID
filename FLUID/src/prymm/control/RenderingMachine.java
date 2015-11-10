@@ -32,13 +32,13 @@ public class RenderingMachine implements Runnable{
 		this.doingCalculation();
 	}
 	
+
 	/**
 	 * Cherry picking test
-	 * feature1
+	 * bug fix
 	 */
-	public void feature1()
+	public void bugfix()
 	{
-		System.out.println("This is a test for cherry picking - feature1 ");
+		System.out.println("This is a test for cherry picking - bugfix ");
 	}
-
 }
