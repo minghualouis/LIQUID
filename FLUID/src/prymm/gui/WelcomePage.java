@@ -37,12 +37,7 @@ public class WelcomePage extends FluidDefaultPage{
 	
 	protected Shell shlFluidDynamicSimulation;
 
-	private Canvas canvas;
-	
-	public Canvas getCanvas()
-	{
-		return canvas;
-	}
+
 	/**
 	 * Open the window.
 	 */

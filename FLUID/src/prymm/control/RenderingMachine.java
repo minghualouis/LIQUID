@@ -1,7 +1,10 @@
 package prymm.control;
 
+import org.eclipse.swt.widgets.Canvas;
+
 import prymm.databean.Flow;
 import prymm.databean.SingleDrop;
+import prymm.gui.FluidDefaultPage;
 
 /**
  * Class rendering machine is used for calculation of all the single drops of flow in the application
@@ -18,15 +21,27 @@ public class RenderingMachine implements Runnable{
 	}
 
 	/**
-	 * calculate the 
+	 * calculate all the drops in canvas
 	 */
-	public void doingCalculation() {
-		// TODO Auto-generated method stub
+	private void doingCalculation() {
+		// For fluid calculation
 		double viscosity = currentFlow.getFlowType().getViscosity();
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
+		double[][] density = new double[alldrops.length][alldrops[0].length]; // storing result
+		
 		// ...used for calculation
+		renderingCanvas(density);
 	}
 
+	/**
+	 * Display calculated density back to UI
+	 */
+	private void renderingCanvas(double[][] density)
+	{
+		// canvas which need for rendering result to UI
+		Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
+
+	}
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub

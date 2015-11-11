@@ -1,5 +1,7 @@
 package prymm.gui;
 
+import org.eclipse.swt.widgets.Canvas;
+
 /**
  * Separating the UI from system
  * @author Minghua
@@ -15,6 +17,16 @@ public class FluidDefaultPage
 	protected static String logFileName = "";
 	
 	private static FluidDefaultPage window;
+	protected Canvas canvas;
+	
+	/**
+	 * get current canvas
+	 * @return
+	 */
+	public Canvas getCanvas()
+	{
+		return canvas;
+	}
 	
 	/**
 	 * create shell and display object and all the widgets
