@@ -200,7 +200,4 @@ public class Flow
 	public void setFlowType(Fluid flowType) {
 		this.flowType = flowType;
 	}
-	
-	
-	
 }

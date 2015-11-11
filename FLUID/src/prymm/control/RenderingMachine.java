@@ -22,6 +22,7 @@ public class RenderingMachine implements Runnable{
 	 */
 	public void doingCalculation() {
 		// TODO Auto-generated method stub
+		double viscosity = currentFlow.getFlowType().getViscosity();
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
 		// ...used for calculation
 	}
