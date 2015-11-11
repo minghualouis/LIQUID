@@ -27,30 +27,22 @@ import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 
+import prymm.control.StateController;
 import prymm.control.UsrDataConfig;
+
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
 
-public class WelcomePage {
+public class WelcomePage extends FluidDefaultPage{
 	
-	private static boolean isReplay = false;
-	private static String replayFileName = "";
-
 	protected Shell shlFluidDynamicSimulation;
 
-	/**
-	 * Launch the application.
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		try {
-			WelcomePage window = new WelcomePage();
-			window.open();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	private Canvas canvas;
+	
+	public Canvas getCanvas()
+	{
+		return canvas;
 	}
-
 	/**
 	 * Open the window.
 	 */
@@ -78,7 +70,7 @@ public class WelcomePage {
 		
 		Composite fluidDisplayComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		
-		Canvas canvas = new Canvas(fluidDisplayComp, SWT.NONE);
+		canvas = new Canvas(fluidDisplayComp, SWT.NONE);
 
 		canvas.setBounds(0, 0, 659, 290);
 		
@@ -195,6 +187,7 @@ public class WelcomePage {
 		new Label(grpLogReplay, SWT.NONE);
 		
 		Button getLogButton = new Button(grpLogReplay, SWT.NONE);
+
 		getLogButton.setEnabled(false);
 		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
 		getLogButton.setText("Get Log");
@@ -339,6 +332,25 @@ public class WelcomePage {
 			}
 		});
 		
-		
+		/**
+		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
+		 */
+		getLogButton.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+//				File logFile = new File(logFileName);
+//				if(StateController.getCurrentState() == StateController.TERMINAL && logFile.exists())
+//				{
+//					
+//				}
+				if (getLogButton.isEnabled()) 
+				{
+					
+				}
+			}
+		});
 	}
+	
 }
