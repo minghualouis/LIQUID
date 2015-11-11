@@ -1,7 +1,5 @@
 package prymm.databean;
 
-import prymm.control.UsrDataConfig;
-
 /**
  * Fluid initialization including type, viscosity
  * @author Minghua
@@ -14,37 +12,42 @@ public class Fluid {
 	 * Can be changed by type of the fluid chozen by user
 	 * Or by viscosity value set by user
 	 */
-	private double viscosity;
+	protected double viscosity;
 	
 	/**
 	 * Type of the fluid
 	 */
-	private String type;
+	protected String type;
 	
 	/**
 	 * Constructor by Fluid type 
 	 */
-	private double temperature;
+	protected double temperature;
 	
-	public Fluid(String fluidType, double temperature)
+	public Fluid(double temperature)
 	{
-		this.type = fluidType;
+		type = "";
 		this.temperature = temperature;
-		// check the type of the fluid
-		if ("Water".equalsIgnoreCase(fluidType)) 
-		{
-			this.viscosity = 1.790*Math.exp((-1230-temperature)*temperature/(36100+360*temperature));
-		}
-		else if ("Glycerin".equalsIgnoreCase(fluidType)) 
-		{
-			this.viscosity = 12100*Math.exp((-1233+temperature)*temperature/(9900+70*temperature)); ;
-		}
-		else
-		{
-			// get the value configured by user for viscosity
-			String viscosityText = UsrDataConfig.getUsrDataConfig().getViscosity();
-			this.viscosity = Double.valueOf(viscosityText);
-		}
+//		// check the type of the fluid
+//		if ("Water".equalsIgnoreCase(fluidType)) 
+//		{
+//			this.viscosity = 1.790*Math.exp((-1230-temperature)*temperature/(36100+360*temperature));
+//		}
+//		else if ("Glycerin".equalsIgnoreCase(fluidType)) 
+//		{
+//			this.viscosity = 12100*Math.exp((-1233+temperature)*temperature/(9900+70*temperature)); ;
+//		}
+//		else
+//		{
+//			// get the value configured by user for viscosity
+
+//		}
+	}
+	
+	public Fluid(String viscosityText)
+	{
+		
+		this.viscosity = Double.valueOf(viscosityText);
 	}
 	
 	public double getViscosity() {

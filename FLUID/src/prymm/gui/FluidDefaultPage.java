@@ -1,7 +1,5 @@
 package prymm.gui;
 
-import org.eclipse.swt.widgets.Canvas;
-
 /**
  * Separating the UI from system
  * @author Minghua
