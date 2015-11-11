@@ -51,7 +51,9 @@ public class RenderingMachine implements Runnable{
 	/**
 	 * Cherry picking test
 	 * feature1
+	 *
 	 */
+	
 	public void feature1()
 	{
 		System.out.println("This is a test for cherry picking - feature1 ");
