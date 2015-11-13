@@ -51,7 +51,6 @@ public class RenderingMachine implements Runnable{
 	/**
 	 * Cherry picking test
 	 * feature1
-	 *
 	 */
 	
 	public void feature1()
