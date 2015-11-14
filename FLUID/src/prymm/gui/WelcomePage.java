@@ -17,6 +17,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.graphics.Point;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.widgets.Combo;
@@ -37,13 +38,14 @@ import org.eclipse.swt.events.PaintEvent;
 public class WelcomePage extends FluidDefaultPage{
 	
 	protected Shell shlFluidDynamicSimulation;
-
+	private Display display;
 
 	/**
 	 * Open the window.
+	 * @wbp.parser.entryPoint
 	 */
 	public void open() {
-		Display display = Display.getDefault();
+		display = Display.getDefault();
 		createContents();
 		shlFluidDynamicSimulation.open();
 		shlFluidDynamicSimulation.layout();
@@ -348,6 +350,20 @@ public class WelcomePage extends FluidDefaultPage{
 				{
 					
 				}
+			}
+		});
+		
+		/**
+		 * Canvas operation
+		 */
+		canvas.addPaintListener(new PaintListener() {
+			
+			@Override
+			public void paintControl(PaintEvent e) {
+				// TODO Auto-generated method stub
+				Rectangle userArea = canvas.getClientArea();
+				e.gc.setBackground(display.getSystemColor(SWT.COLOR_CYAN)); 
+		        e.gc.fillOval(0, 0, userArea.width, userArea.height); 
 			}
 		});
 	}
