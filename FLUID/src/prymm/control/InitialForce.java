@@ -14,38 +14,38 @@ public class InitialForce {
 	{
 		// if user configure the water or glycerin, default speed will be used
 		String speedText = UsrDataConfig.getUsrDataConfig().getInitialSpeed();
-		double speed = Double.valueOf(speedText);
+		double speed = Double.valueOf(speedText).doubleValue();
+		
 //		if (!UsrDataConfig.getUsrDataConfig().getFluidType().equals("User Defined")) {
 //			speed = 110;
 //		}
 		switch (direction) 
 		{
 		case Flow.LEFT:
-			for (int i = 0; i < allDrops2[0].length; i++) 
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
 			{
 				allDrops2[0][i].setxVel(speed);
 			}
 			break;
 			
 		case Flow.RIGHT:
-			int length = allDrops2.length - 1;
-			for (int i = 0; i < allDrops2[0].length; i++) 
+			
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
 			{
-				allDrops2[length][i].setxVel(-speed);
+				allDrops2[UsrDataConfig.getUsrDataConfig().getLength()][i].setxVel(-speed);
 			}
 			break;
 
 		case Flow.TOP:
-			int length1 = allDrops2.length - 1;
-			int width = allDrops2[0].length;
-			for (int i = 0; i < length1; i++) 
+			
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
 			{
-				allDrops2[i][width].setyVel(speed);
+				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth()].setyVel(speed);
 			}
 			break;
 
 		case Flow.BOTTOM:
-			for (int i = 0; i < allDrops2.length; i++) 
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
 			{
 				allDrops2[i][0].setyVel(-speed);
 			}

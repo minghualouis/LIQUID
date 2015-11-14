@@ -34,6 +34,7 @@ public class Barrier
 		String shape = this.getShape();
 		int xCenter = UsrDataConfig.getUsrDataConfig().getLength() / 2;
 		int yCenter = UsrDataConfig.getUsrDataConfig().getWidth() / 2;
+		System.out.println(allDrops2.length + "------" + allDrops2[0].length);
 		SingleDrop center = allDrops2[xCenter][yCenter];
 		center.disableDrop();
 		if (shape.equals("Circular")) 

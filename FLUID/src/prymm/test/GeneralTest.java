@@ -20,4 +20,21 @@ public class GeneralTest {
 		System.out.println(negativeNum < 0);
 		
 	}
+	
+	@Test
+	public void testParseInt()
+	{
+		String number = "123 ";
+		int n = Integer.parseInt(number);
+		System.out.println(n);
+		
+	}
+	
+	@Test
+	public void testArrayBound()
+	{
+		int[] a = new int[]{1,2,3};
+		System.out.println(a[-1]);
+		
+	}
 }

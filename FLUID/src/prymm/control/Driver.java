@@ -19,6 +19,8 @@ public class Driver {
 			window.setCurrentPage(window);
 			System.out.println(window == null);
 			window.open();
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

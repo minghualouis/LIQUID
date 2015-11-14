@@ -28,6 +28,17 @@ public class SingleDrop
 	 */
 	private SingleDot[][] dots = new SingleDot[3][3];
 	
+	public SingleDrop()
+	{
+		this.isEnable = true;
+		for (int i = 0; i < dots.length; i++)
+		{
+			for (int j = 0; j < dots[0].length; j++) 
+			{
+				dots[i][j] = new SingleDot();
+			}
+		}
+	}
 	
 	/**
 	 * disable the drop, used for setting barrier
@@ -38,6 +49,7 @@ public class SingleDrop
 		this.setDensity(1);
 		this.setxVel(0);
 		this.setyVel(0);
+		this.setEnable(false);
 	}
 	
 	public boolean isEnable() {

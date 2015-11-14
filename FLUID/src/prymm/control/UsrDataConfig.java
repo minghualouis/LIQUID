@@ -52,8 +52,9 @@ public class UsrDataConfig
 	{
 		String containerSize =  this.getContainerSize();
 		String[] sizeText = containerSize.split("x");
-		this.setLength(Integer.valueOf(sizeText[0]));
-		this.setWidth(Integer.valueOf(sizeText[1]));
+
+		this.setLength(Integer.parseInt(sizeText[0].trim()));
+		this.setWidth(Integer.parseInt(sizeText[1].trim()));
 	}
 	
 	public String getFluidType() {
@@ -97,6 +98,7 @@ public class UsrDataConfig
 	}
 	public void setContainerSize(String containerSize) {
 		this.containerSize = containerSize;
+		setSize();
 	}
 	public boolean isEntryAdded() {
 		return isEntryAdded;

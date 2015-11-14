@@ -29,6 +29,7 @@ import org.eclipse.swt.events.SelectionEvent;
 
 import prymm.control.StateController;
 import prymm.control.UsrDataConfig;
+import prymm.control.UsrDataProcessor;
 
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
@@ -236,8 +237,11 @@ public class WelcomePage extends FluidDefaultPage{
 						usrcDataConfig.setViscosity(String.valueOf(viscosityScale.getSelection()));
 					}
 					usrcDataConfig.setInitialForce(String.valueOf(initialForceDirection.getText()));
-					usrcDataConfig.setInitialSpeed(String.valueOf(speedScale.getSelection()));
+					//speedScale.getSelection()
+					usrcDataConfig.setInitialSpeed(String.valueOf("0.1"));
 					usrcDataConfig.setTemperature(String.valueOf(tempScale.getSelection()));
+					
+					UsrDataProcessor.processUsrData();
 				}
 				// for replay
 				else

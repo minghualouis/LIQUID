@@ -59,7 +59,14 @@ public class Flow
 		int xdim = this.getxDim();
 		int ydim = this.getyDim();
 		// length defined by user is the ydim of the array
-		allDrops = new SingleDrop[ydim][xdim];
+		allDrops = new SingleDrop[xdim][ydim];
+		for (int i = 0; i < allDrops.length; i++)
+		{
+			for (int j = 0; j < allDrops[0].length; j++) 
+			{
+				allDrops[i][j] = new SingleDrop();
+			}
+		}
 		setInitialForce(allDrops);
 	}
 

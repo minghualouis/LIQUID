@@ -1,5 +1,6 @@
 package prymm.control;
 
+import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.widgets.Canvas;
 
 import prymm.databean.Flow;
@@ -28,10 +29,8 @@ public class RenderingMachine implements Runnable{
 	 */
 	private void doingCalculation() {
 		// For fluid calculation
+		System.out.println("Begin to do calculation");
 		double viscosity = currentFlow.getFlowType().getViscosity();
-		//SingleDrop[][] alldrops = currentFlow.getAllDrops();
-		double[][] density = new double[alldrops.length][alldrops[0].length]; // storing result
-		
 		// ...used for calculation
 		int time = 0;
 		int stepTime = 0;
@@ -39,9 +38,9 @@ public class RenderingMachine implements Runnable{
 		int streamTime = 0;
 		int paintTime = 0;
 		long startTime = System.currentTimeMillis();
-		//force();
+//		force();
 		long forceTime = System.currentTimeMillis();
-		collision();
+		collision(viscosity);
 		long afterCollideTime = System.currentTimeMillis();
 		collideTime = (int)(afterCollideTime - forceTime);		// 23-24 ms for 600x600 grid
 		stream();
@@ -53,15 +52,21 @@ public class RenderingMachine implements Runnable{
 		//dataCanvas.repaint();//ys9:replace with set repaint method in rendering
 		
 		// ...used for calculation
-		renderingCanvas(density);
+		renderingCanvas();
 	}
-	void collision() {
-		double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
-		double viscosity = Double.valueOf(UsrDataConfig.getUsrDataConfig().getViscosity()).doubleValue();
-		double xdim = Double.valueOf(UsrDataConfig.getUsrDataConfig().getLength()).doubleValue();
-		double ydim = Double.valueOf(UsrDataConfig.getUsrDataConfig().getWidth()).doubleValue();
-		SingleDrop[][] alldrops = currentFlow.getAllDrops();
+	
+	/**
+	 * Calculating the density, velocity for each lattice 
+	 * @param viscosity
+	 */
+	private void collision(double viscosity) {
+		System.out.println("Goin in Collision");
 		
+		double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
+		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
+		SingleDrop[][] alldrops = currentFlow.getAllDrops();
+
 		double omega = 1 / (3*viscosity+ 0.5);// reciprocal of tau, the relaxation time
 		for (int x=0; x<xdim; x++) {//ys9:Get viscosity
 			for (int y=0; y<ydim; y++) {
@@ -121,16 +126,19 @@ public class RenderingMachine implements Runnable{
 
 	
 	// Stream particles into neighboring cells:
-	void stream() {
-		int xdim = Integer.valueOf(UsrDataConfig.getUsrDataConfig().getLength()).intValue();
-		int ydim = Integer.valueOf(UsrDataConfig.getUsrDataConfig().getWidth()).intValue();
+	private void stream() {
+		System.out.println("Goin in Stream");
+		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
-		for (int x=0; x<xdim-1; x++) {		// first start in NW corner...
-			for (int y=ydim-1; y>0; y--) {
+		for (int x=0; x<xdim-1; x++) {// first start in NW corner...
+			for (int y=ydim-1; y>0; y--) 
+			{
 				alldrops[x][y].getDots()[1][2].setVal(alldrops[x][y-1].getDots()[1][2].getVal());// and the north-moving particles
 				alldrops[x][y].getDots()[0][2].setVal(alldrops[x+1][y-1].getDots()[0][2].getVal());// and the northwest-moving particles
 			}
 		}
+		
 		for (int x=xdim-1; x>0; x--) {		// now start in NE corner...
 			for (int y=ydim-1; y>0; y--) {
 				alldrops[x][y].getDots()[2][1].setVal(alldrops[x-1][y].getDots()[2][1].getVal());// and the east-moving particles
@@ -160,7 +168,7 @@ public class RenderingMachine implements Runnable{
 		// Stream particles in from the non-existent space to the left, with the
 		// user-determined speed:
 		//double v = speedScroller.getValue();
-		double v = Double.valueOf(UsrDataConfig.getUsrDataConfig().getInitialSpeed());
+		double v = Double.parseDouble(UsrDataConfig.getUsrDataConfig().getInitialSpeed().trim());
 		for (int y=0; y<ydim; y++) {
 			if (alldrops[0][y].isEnable()) {
 				alldrops[0][y].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
@@ -202,9 +210,10 @@ public class RenderingMachine implements Runnable{
 	// Bounce particles off of barriers:
 	// (The ifs are needed to prevent array index out of bounds errors. Could handle edges
 	//  separately to avoid this.)
-	void bounce() {
-		double xdim = Double.valueOf(UsrDataConfig.getUsrDataConfig().getLength()).doubleValue();
-		double ydim = Double.valueOf(UsrDataConfig.getUsrDataConfig().getWidth()).doubleValue();
+	private void bounce() {
+		System.out.println("Goin in bounce");
+		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 		double direction,oppdirection;
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
 		
@@ -291,18 +300,35 @@ public class RenderingMachine implements Runnable{
 	/**
 	 * Display calculated density back to UI
 	 */
-	private void renderingCanvas(double[][] density)
+	private void renderingCanvas()
 	{
 		// canvas which need for rendering result to UI
-		Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
-
+		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
+//		Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
+		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
+		{
+			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
+			{
+				double density = curentDrops[i][j].getDensity();
+				/**
+				 * draw to the canvas
+				 */
+				System.out.println(density);
+			}
+		}
 	}
 	
 	public void run() {
 		// TODO Auto-generated method stub
-		while (true) {
-			if (StateController.getCurrentState() == StateController.RUNNING) {
-				for (int s=0; s<10; s++) this.doingCalculation();
+		while (true) 
+		{
+			if (StateController.getCurrentState() == StateController.RUNNING) 
+			{
+				
+				for (int s=0; s<10; s++)
+				{
+					this.doingCalculation();
+				}
 				try {Thread.sleep(1);} catch (InterruptedException e) {}
 				//repaint();//ys9:to add
 			} else {
