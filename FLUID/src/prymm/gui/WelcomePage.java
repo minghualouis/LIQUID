@@ -34,6 +34,7 @@ import prymm.control.UsrDataProcessor;
 
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.wb.swt.SWTResourceManager;
 
 public class WelcomePage extends FluidDefaultPage{
 	
@@ -67,10 +68,12 @@ public class WelcomePage extends FluidDefaultPage{
 		shlFluidDynamicSimulation.setLayout(new FillLayout(SWT.VERTICAL));
 		
 		Composite fluidDisplayComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
+		fluidDisplayComp.setBackground(SWTResourceManager.getColor(SWT.COLOR_TITLE_BACKGROUND));
 		
 		canvas = new Canvas(fluidDisplayComp, SWT.NONE);
-
+		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION));
 		canvas.setBounds(0, 0, 659, 290);
+//		canvas.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
 		
 		Composite userControlComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		userControlComp.setLayout(new GridLayout(1, false));
@@ -356,16 +359,18 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Canvas operation
 		 */
-		canvas.addPaintListener(new PaintListener() {
-			
-			@Override
-			public void paintControl(PaintEvent e) {
-				// TODO Auto-generated method stub
-				Rectangle userArea = canvas.getClientArea();
-				e.gc.setBackground(display.getSystemColor(SWT.COLOR_CYAN)); 
-		        e.gc.fillOval(0, 0, userArea.width, userArea.height); 
-			}
-		});
+//		canvas.addPaintListener(new PaintListener() {
+//			
+//			@Override
+//			public void paintControl(PaintEvent e) {
+//				// TODO Auto-generated method stub
+//				
+////				Rectangle userArea = canvas.getClientArea();
+////
+////				e.gc.setBackground(display.getSystemColor(SWT.COLOR_CYAN)); 
+////		        e.gc.fillOval(0, 0, userArea.width, userArea.height); 
+//			}
+//		});
 	}
 	
 }

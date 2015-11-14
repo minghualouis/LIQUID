@@ -1,6 +1,7 @@
 package prymm.control;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
 import prymm.databean.Flow;
@@ -14,6 +15,9 @@ import prymm.gui.FluidDefaultPage;
  */
 public class RenderingMachine implements Runnable{
 
+	private static Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
+	private static GC gc = new GC(currentCanvas);
+	
 	Flow currentFlow = null;
 	double four9ths = 4.0 / 9;
 	double one9th = 1.0 / 9;
@@ -52,7 +56,7 @@ public class RenderingMachine implements Runnable{
 		//dataCanvas.repaint();//ys9:replace with set repaint method in rendering
 		
 		// ...used for calculation
-		renderingCanvas();
+//		renderingCanvas();
 	}
 	
 	/**
@@ -302,18 +306,31 @@ public class RenderingMachine implements Runnable{
 	 */
 	private void renderingCanvas()
 	{
+		int height = currentCanvas.getBounds().height;
+		int width = currentCanvas.getBounds().width;
+		System.out.println("Size is " + height + ": " + width);
 		// canvas which need for rendering result to UI
 		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
-//		Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
+		
 		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
 		{
 			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
 			{
 				double density = curentDrops[i][j].getDensity();
+				
 				/**
 				 * draw to the canvas
 				 */
-				System.out.println(density);
+				
+				
+				gc.drawRectangle(i*10, j*10, 10, 10);
+				try {
+					Thread.sleep(10);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//System.out.println(density);
 			}
 		}
 	}
@@ -328,6 +345,7 @@ public class RenderingMachine implements Runnable{
 				for (int s=0; s<10; s++)
 				{
 					this.doingCalculation();
+					this.renderingCanvas();
 				}
 				try {Thread.sleep(1);} catch (InterruptedException e) {}
 				//repaint();//ys9:to add
