@@ -28,12 +28,79 @@ public class RenderingMachine implements Runnable{
 		currentFlow = initialFlow;
 	}
 
+	private void canvasInit() {
+		System.out.println("Doing Canvas Init");
+		
+		//double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
+		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
+		double xVel,yVel,v = Double.parseDouble(UsrDataConfig.getUsrDataConfig().getInitialSpeed().trim());
+		String initForce = UsrDataConfig.getUsrDataConfig().getInitialForce(); 
+		String fluidType = UsrDataConfig.getUsrDataConfig().getFluidType();
+		SingleDrop[][] alldrops = currentFlow.getAllDrops();
+		double density;
+		//Set density of all the lattice before running simulation
+		if ("Water".equals(fluidType)) 
+		{
+			System.out.println("Fluid is water");
+			density = 1;
+		}
+		else if("Glycerin".equals(fluidType))
+		{
+			System.out.println("Fluid is glycerin");
+			density = 1.26;
+		}
+		else
+		{
+			density = 1;
+		}
+		//Set velocity of all lattice before running simulation
+		if ("Left".equals(initForce)) 
+		{
+			System.out.println("Direction is from left");
+			xVel = v;
+			yVel = 0;
+		}
+		else if("Right".equals(initForce))
+		{
+			xVel = -v;
+			yVel = 0;
+		}
+		else if("Top".equals(initForce))
+		{
+			xVel = 0;
+			yVel = -v;
+		}
+		else
+		{
+			xVel  = 0;
+			yVel = v;
+		}
+		for (int x=0; x<xdim; x++) {//ys9:Get viscosity
+			for (int y=0; y<ydim; y++) {
+				alldrops[x][y].setDensity(density);
+				alldrops[x][y].setxVel(xVel);
+				alldrops[x][y].setyVel(yVel);
+				alldrops[x][y].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+				
+			}
+		}
+		
+	}
 	/**
 	 * calculate all the drops in canvas
 	 */
 	private void doingCalculation() {
 		// For fluid calculation
-		System.out.println("Begin to do calculation");
+		//System.out.println("Begin to do calculation");
 		double viscosity = currentFlow.getFlowType().getViscosity();
 		// ...used for calculation
 		int time = 0;
@@ -64,7 +131,7 @@ public class RenderingMachine implements Runnable{
 	 * @param viscosity
 	 */
 	private void collision(double viscosity) {
-		System.out.println("Goin in Collision");
+		//System.out.println("Goin in Collision");
 		
 		double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
 		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
@@ -131,7 +198,7 @@ public class RenderingMachine implements Runnable{
 	
 	// Stream particles into neighboring cells:
 	private void stream() {
-		System.out.println("Goin in Stream");
+		//System.out.println("Goin in Stream");
 		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
@@ -215,7 +282,7 @@ public class RenderingMachine implements Runnable{
 	// (The ifs are needed to prevent array index out of bounds errors. Could handle edges
 	//  separately to avoid this.)
 	private void bounce() {
-		System.out.println("Goin in bounce");
+		//System.out.println("Goin in bounce");
 		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 		double direction,oppdirection;
@@ -336,6 +403,7 @@ public class RenderingMachine implements Runnable{
 	}
 	
 	public void run() {
+		this.canvasInit();
 		// TODO Auto-generated method stub
 		while (true) 
 		{
@@ -347,7 +415,7 @@ public class RenderingMachine implements Runnable{
 					this.doingCalculation();
 					this.renderingCanvas();
 				}
-				try {Thread.sleep(1);} catch (InterruptedException e) {}
+				try {Thread.sleep(2000);} catch (InterruptedException e) {}
 				//repaint();//ys9:to add
 			} else {
 				try {Thread.sleep(200);} catch (InterruptedException e) {}
