@@ -1,6 +1,8 @@
-package prymm.databean;
+package prymm.model;
 
-import prymm.control.UsrDataConfig;
+import prymm.controller.UsrDataConfig;
+import prymm.databean.Glycerin;
+import prymm.databean.Water;
 
 public class FluidFactory
 {

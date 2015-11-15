@@ -1,4 +1,4 @@
-package prymm.control;
+package prymm.controller;
 
 /**
  * Interface for UI to call to initialize the fluid settings

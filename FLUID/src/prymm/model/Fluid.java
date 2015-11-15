@@ -1,4 +1,4 @@
-package prymm.databean;
+package prymm.model;
 
 /**
  * Fluid initialization including type, viscosity

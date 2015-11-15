@@ -1,6 +1,6 @@
-package prymm.control;
+package prymm.model;
 
-import prymm.databean.SingleDrop;
+import prymm.controller.UsrDataConfig;
 
 /**
  * Barrier class for setting range for all drops as per the shape of the barrier

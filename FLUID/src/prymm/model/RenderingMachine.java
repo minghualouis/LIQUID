@@ -1,11 +1,11 @@
-package prymm.control;
+package prymm.model;
 
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
-import prymm.databean.Flow;
-import prymm.databean.SingleDrop;
+import prymm.controller.StateController;
+import prymm.controller.UsrDataConfig;
 import prymm.gui.FluidDefaultPage;
 
 /**
@@ -23,13 +23,17 @@ public class RenderingMachine implements Runnable{
 	double one9th = 1.0 / 9;
 	double one36th = 1.0 / 36;
 	
+	/**
+	 * for thread manangement minghua
+	 */
+	private static boolean isRunning = true;
+	
 	public RenderingMachine(Flow initialFlow) {
 		// TODO Auto-generated constructor stub
 		currentFlow = initialFlow;
 	}
 
 	private void canvasInit() {
-		System.out.println("Doing Canvas Init");
 		
 		//double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
 		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
@@ -42,12 +46,12 @@ public class RenderingMachine implements Runnable{
 		//Set density of all the lattice before running simulation
 		if ("Water".equals(fluidType)) 
 		{
-			System.out.println("Fluid is water");
+//			System.out.println("Fluid is water");
 			density = 1;
 		}
 		else if("Glycerin".equals(fluidType))
 		{
-			System.out.println("Fluid is glycerin");
+//			System.out.println("Fluid is glycerin");
 			density = 1.26;
 		}
 		else
@@ -57,7 +61,7 @@ public class RenderingMachine implements Runnable{
 		//Set velocity of all lattice before running simulation
 		if ("Left".equals(initForce)) 
 		{
-			System.out.println("Direction is from left");
+//			System.out.println("Direction is from left");
 			xVel = v;
 			yVel = 0;
 		}
@@ -123,7 +127,6 @@ public class RenderingMachine implements Runnable{
 		//dataCanvas.repaint();//ys9:replace with set repaint method in rendering
 		
 		// ...used for calculation
-//		renderingCanvas();
 	}
 	
 	/**
@@ -373,9 +376,9 @@ public class RenderingMachine implements Runnable{
 	 */
 	private void renderingCanvas()
 	{
-		int height = currentCanvas.getBounds().height;
-		int width = currentCanvas.getBounds().width;
-		System.out.println("Size is " + height + ": " + width);
+//		int height = currentCanvas.getBounds().height;
+//		int width = currentCanvas.getBounds().width;
+//		System.out.println("Size is " + height + ": " + width);
 		// canvas which need for rendering result to UI
 		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
 		
@@ -384,20 +387,25 @@ public class RenderingMachine implements Runnable{
 			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
 			{
 				double density = curentDrops[i][j].getDensity();
-				
+				//System.out.println(density);
 				/**
 				 * draw to the canvas
 				 */
 				
-				
-				gc.drawRectangle(i*10, j*10, 10, 10);
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+//				
+//				gc.drawRectangle(i*10, j*10, 10, 10);
+//				try {
+//					Thread.sleep(10);
+//				} catch (InterruptedException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
 				//System.out.println(density);
+			}
+			if(Driver.DEBUG)
+			{
+				System.out.println("LMH");
+				
 			}
 		}
 	}
@@ -405,7 +413,7 @@ public class RenderingMachine implements Runnable{
 	public void run() {
 		this.canvasInit();
 		// TODO Auto-generated method stub
-		while (true) 
+		while (isRunning) 
 		{
 			if (StateController.getCurrentState() == StateController.RUNNING) 
 			{
@@ -415,10 +423,20 @@ public class RenderingMachine implements Runnable{
 					this.doingCalculation();
 					this.renderingCanvas();
 				}
-				try {Thread.sleep(2000);} catch (InterruptedException e) {}
+				try 
+					{Thread.sleep(2000);
+					} catch (InterruptedException e) {
+						
+					}
 				//repaint();//ys9:to add
-			} else {
+			}
+			else if(StateController.getCurrentState() == StateController.PAUSE)
+			{
 				try {Thread.sleep(200);} catch (InterruptedException e) {}
+			}
+			else if(StateController.getCurrentState() == StateController.TERMINAL)
+			{
+				isRunning = false;
 			}
 			//repaint();//ys9:to add// repeated painting when not running uses resources but is handy for graphics adjustments
 		}

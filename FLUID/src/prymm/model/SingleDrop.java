@@ -1,4 +1,6 @@
-package prymm.databean;
+package prymm.model;
+
+import prymm.databean.SingleDot;
 
 /**
  * This class represents single drop of liquid in the lattice

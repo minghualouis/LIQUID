@@ -1,5 +1,7 @@
 package prymm.databean;
 
+import prymm.model.Fluid;
+
 /**
  * Class Water for creating water object
  * @author Minghua

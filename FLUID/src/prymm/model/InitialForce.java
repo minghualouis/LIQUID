@@ -1,7 +1,6 @@
-package prymm.control;
+package prymm.model;
 
-import prymm.databean.Flow;
-import prymm.databean.SingleDrop;
+import prymm.controller.UsrDataConfig;
 
 public class InitialForce {
 

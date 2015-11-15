@@ -1,4 +1,4 @@
-package prymm.control;
+package prymm.controller;
 
 /**
  * State controller for application

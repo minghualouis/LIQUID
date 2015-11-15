@@ -2,8 +2,8 @@ package prymm.test;
 
 import org.junit.Test;
 
-import prymm.control.UsrDataConfig;
-import prymm.control.UsrDataProcessor;
+import prymm.controller.UsrDataConfig;
+import prymm.controller.UsrDataProcessor;
 
 public class InitialTest {
 
@@ -21,6 +21,11 @@ public class InitialTest {
 		uc.setTemperature("50");
 		uc.setInitialSpeed("0.1");
 		// start application
-		UsrDataProcessor.processUsrData();
+		try {
+			UsrDataProcessor.processUsrData();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

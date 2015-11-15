@@ -1,10 +1,16 @@
-package prymm.control;
+package prymm.model;
 
 import prymm.gui.FluidDefaultPage;
 import prymm.gui.WelcomePage;
 
+/**
+ * Program Enterance
+ * @author Minghua
+ *
+ */
 public class Driver {
 
+	public static final boolean DEBUG = true;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -17,7 +23,6 @@ public class Driver {
 			 */
 			FluidDefaultPage window = new WelcomePage();
 			window.setCurrentPage(window);
-			System.out.println(window == null);
 			window.open();
 			
 			

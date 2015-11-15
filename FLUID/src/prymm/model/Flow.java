@@ -1,8 +1,6 @@
-package prymm.databean;
+package prymm.model;
 
-import prymm.control.Barrier;
-import prymm.control.InitialForce;
-import prymm.control.UsrDataConfig;
+import prymm.controller.UsrDataConfig;
 
 /**
  * This class is created for getting inherited by actual tpe of fluid that user has chozen 
@@ -47,7 +45,6 @@ public class Flow
 		this.xDim = xDim;
 		this.yDim = yDim;
 		this.flowType = flowType;
-		this.initialFlow();
 	}
 	
 	
@@ -68,6 +65,17 @@ public class Flow
 			}
 		}
 		setInitialForce(allDrops);
+	}
+	
+	/**
+	 * Update the flow
+	 */
+	public void updateFlow(int xDim, int yDim, Fluid flowType)
+	{
+		this.xDim = xDim;
+		this.yDim = yDim;
+		this.flowType = flowType;
+		this.initialFlow();
 	}
 
 	/**

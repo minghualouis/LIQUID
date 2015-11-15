@@ -1,5 +1,7 @@
 package prymm.databean;
 
+import prymm.model.Fluid;
+
 /**
  * Glycerin fluid type
  * @author Minghua
