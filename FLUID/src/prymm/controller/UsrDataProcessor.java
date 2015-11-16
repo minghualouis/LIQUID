@@ -74,18 +74,7 @@ public class UsrDataProcessor
 	{
 		if(StateController.getCurrentState() == StateController.RUNNING)
 		{
-//			Thread currentThread = Thread.currentThread();
-//			if(currentThread.isAlive())
-//			{
-//				try {
-//					currentThread.wait();
 			StateController.setCurrentState(StateController.PAUSE);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-			
 		}
 	}
 	
@@ -97,12 +86,7 @@ public class UsrDataProcessor
 	{
 		if(StateController.getCurrentState() == StateController.PAUSE)
 		{
-//			Thread currentThread = Thread.currentThread();
-//			if(currentThread.isAlive())
-//			{
-//				currentThread.notify();
 			StateController.setCurrentState(StateController.RUNNING);
-//			}
 		}
 	}
 	
@@ -115,17 +99,7 @@ public class UsrDataProcessor
 	{
 		if(StateController.getCurrentState() == StateController.RUNNING || StateController.getCurrentState() == StateController.PAUSE)
 		{
-//			Thread currentThread = Thread.currentThread();
-//			if(currentThread.isAlive())
-//			{
-//				try {
-//					currentThread.join();
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
 				StateController.setCurrentState(StateController.TERMINAL);
-//			}
 		}
 	}
 	

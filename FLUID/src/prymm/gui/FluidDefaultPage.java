@@ -1,6 +1,7 @@
 package prymm.gui;
 
 import org.eclipse.swt.widgets.Canvas;
+import org.eclipse.swt.widgets.Display;
 
 /**
  * Separating the UI from system
@@ -18,7 +19,12 @@ public class FluidDefaultPage
 	
 	private static FluidDefaultPage window;
 	protected Canvas canvas;
+	protected Display display;
 	
+	public Display getDisplay() {
+		return display;
+	}
+
 	/**
 	 * get current canvas
 	 * @return

@@ -37,4 +37,11 @@ public class GeneralTest {
 		System.out.println(a[-1]);
 		
 	}
+	
+	@Test
+	public void testDivision()
+	{
+		double r = 5 / 3.0;
+		System.out.println(r);
+	}
 }

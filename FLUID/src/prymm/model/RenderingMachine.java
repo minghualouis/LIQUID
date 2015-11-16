@@ -1,6 +1,7 @@
 package prymm.model;
 
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
@@ -15,13 +16,13 @@ import prymm.gui.FluidDefaultPage;
  */
 public class RenderingMachine implements Runnable{
 
-	private static Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
-	private static GC gc = new GC(currentCanvas);
 	
 	Flow currentFlow = null;
 	double four9ths = 4.0 / 9;
 	double one9th = 1.0 / 9;
 	double one36th = 1.0 / 36;
+	
+	private static double[][] density = new double[UsrDataConfig.getUsrDataConfig().getLength()][UsrDataConfig.getUsrDataConfig().getWidth()];
 	
 	/**
 	 * for thread manangement minghua
@@ -376,9 +377,10 @@ public class RenderingMachine implements Runnable{
 	 */
 	private void renderingCanvas()
 	{
-//		int height = currentCanvas.getBounds().height;
-//		int width = currentCanvas.getBounds().width;
-//		System.out.println("Size is " + height + ": " + width);
+//		if(Driver.DEBUG)
+//		{
+//			System.out.println("Size is " + height + ": " + width);
+//		}
 		// canvas which need for rendering result to UI
 		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
 		
@@ -386,28 +388,33 @@ public class RenderingMachine implements Runnable{
 		{
 			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
 			{
-				double density = curentDrops[i][j].getDensity();
-				//System.out.println(density);
-				/**
-				 * draw to the canvas
-				 */
-				
-//				
-//				gc.drawRectangle(i*10, j*10, 10, 10);
-//				try {
-//					Thread.sleep(10);
-//				} catch (InterruptedException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-				//System.out.println(density);
+				density[i][j] = curentDrops[i][j].getDensity();
+				if(Driver.DEBUG)
+				{
+					System.out.print(density[i][j]);
+					
+				}
 			}
 			if(Driver.DEBUG)
 			{
-				System.out.println("LMH");
+				System.out.println("");
 				
 			}
 		}
+		
+		/**
+		 * draw to the canvas
+		 */
+//		ImageData md = new 
+		FluidDefaultPage.getCurrentPage().getDisplay().asyncExec(new Runnable() 
+		{
+			@Override
+			public void run() 
+			{
+				Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
+				
+			}
+		});
 	}
 	
 	public void run() {
