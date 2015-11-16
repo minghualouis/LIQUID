@@ -1,7 +1,13 @@
 package prymm.model;
 
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
+import org.eclipse.swt.graphics.PaletteData;
+import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
@@ -32,8 +38,14 @@ public class RenderingMachine implements Runnable{
 	public RenderingMachine(Flow initialFlow) {
 		// TODO Auto-generated constructor stub
 		currentFlow = initialFlow;
+		
 	}
 
+//	public RenderingMachine getCurrentRenderingMachine()
+//	{
+//		
+//	}
+	
 	private void canvasInit() {
 		
 		//double n, one9thn, one36thn, vx, vy, vx2, vy2, vx3, vy3, vxvy2, v2, v215;
@@ -389,30 +401,47 @@ public class RenderingMachine implements Runnable{
 			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
 			{
 				density[i][j] = curentDrops[i][j].getDensity();
-				if(Driver.DEBUG)
-				{
-					System.out.print(density[i][j]);
-					
-				}
-			}
-			if(Driver.DEBUG)
-			{
-				System.out.println("");
-				
+
 			}
 		}
 		
 		/**
 		 * draw to the canvas
 		 */
-//		ImageData md = new 
 		FluidDefaultPage.getCurrentPage().getDisplay().asyncExec(new Runnable() 
 		{
 			@Override
 			public void run() 
 			{
 				Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
-				
+				GC gc = new GC(currentCanvas);
+				int height = currentCanvas.getClientArea().height;
+				int width = currentCanvas.getClientArea().width;
+				if(Driver.DEBUG)
+				{
+					System.out.println("Height of canvas is : " + height + " Width is: " + width);
+				}
+				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
+			    float hue = 0; // range is 0-360
+				ImageData md = new ImageData(360, 100, 24, paletteData);
+				for(int x = 0; x < md.width; x++){
+			        for(int y = 0; y < md.height; y++){
+//			        	hue = (float) ((2.0/3) * (1 - x * 1.0/360));
+			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
+			        	md.setPixel(x, y, pixel);
+			        }
+			        hue += 360f / md.width;
+//			        hue += 0.03 * Math.sin(6*Math.PI*hue);
+			    }
+	        	try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
+			    gc.drawImage(image, 0, 0);
+			    image.dispose();
 			}
 		});
 	}
@@ -449,23 +478,5 @@ public class RenderingMachine implements Runnable{
 		}
 	
 	}
-	
-	/**
-	 * Cherry picking test
-	 * feature1
-	 */
-	
-	public void feature1()
-	{
-		System.out.println("This is a test for cherry picking - feature1 ");
-	}
 
-	/**
-	 * Cherry picking test
-	 * bug fix
-	 */
-	public void bugfix()
-	{
-		System.out.println("This is a test for cherry picking - bugfix ");
-	}
 }

@@ -477,13 +477,7 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Canvas operation
 		 */
-		canvas.addPaintListener(new PaintListener() {
-			
-			@Override
-			public void paintControl(PaintEvent e) {
-
-			}
-		});
+//		canvas.addPaintListener();
 		
 		/**
 		 * Stop button operation
