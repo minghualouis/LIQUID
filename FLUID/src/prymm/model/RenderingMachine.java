@@ -392,28 +392,18 @@ public class RenderingMachine implements Runnable{
 //		{
 //			System.out.println("Size is " + height + ": " + width);
 //		}		
-		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
-		
-		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
-		{
-			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
-			{
-				density[i][j] = curentDrops[i][j].getDensity();
-
-			}
-		}
 		/**
 		 * draw to the canvas
 		 */
-		
 		FluidDefaultPage.getCurrentPage().getDisplay().asyncExec(new Runnable() 
 		{
 			@Override
 			public void run() 
 			{
-				
 				Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
 				GC gc = new GC(currentCanvas);
+				int height = currentCanvas.getClientArea().height;
+				int width = currentCanvas.getClientArea().width;
 				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 				SingleDrop[][] alldrops = currentFlow.getAllDrops();
@@ -421,29 +411,44 @@ public class RenderingMachine implements Runnable{
 				{
 					System.out.println("Height of canvas is : " + ydim + " Width is: " + xdim);
 				}
+				double[][] curl = new double[xdim][ydim];
+				for (int x=1; x<xdim-1; x++) {
+					for (int y=1; y<ydim-1; y++) {
+						curl[x][y] = (alldrops[x+1][y].getyVel() - alldrops[x-1][y].getyVel()) - (alldrops[x][y+1].getxVel() - alldrops[x][y-1].getxVel());
+					}
+				}
+				for (int y=1; y<ydim-1; y++) {
+					curl[0][y] = 2*(alldrops[1][y].getyVel() - alldrops[0][y].getyVel()) - (alldrops[0][y+1].getxVel() - alldrops[0][y-1].getxVel());
+					curl[xdim-1][y] = 2*(alldrops[xdim-1][y].getyVel() - alldrops[xdim-2][y].getyVel()) - (alldrops[xdim-1][y+1].getxVel() - alldrops[xdim-1][y-1].getxVel());
+				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
-			    /**
-			     * ImageData should contains number of pixels same as singledots not singledrops
-			     */
+			    int pixel;
 				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
+				System.out.println("Height of canvas  : " + height + " Width : " + width);
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
-			        	if(hue > 360)
-			        	{
-			        		hue = 0;
+			        	//Check barrier and set black if barrier
+			        	if(!alldrops[x][y].isEnable()){
+			        		pixel = paletteData.getPixel(new RGB(0f, 0f, 0f));
 			        	}
-//			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
-						hue = (float) ( (220 * density[x][y] + 0.5));
-						int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
+			        	else{//Else do the colour based on density
+			        		//hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
+				        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
+			        		pixel = (int) (0xffb200 * ((alldrops[x][y].getDensity())+1));
+			        		
+			        	}
+			        	
 			        	md.setPixel(x, y, pixel);
 			        }
-		        	try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			        //hue += 360f / md.width;
+			        //hue += 0.03 * Math.sin(6*Math.PI*hue);
+			    }
+	        	try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
 			    gc.drawImage(image, 0, 0);

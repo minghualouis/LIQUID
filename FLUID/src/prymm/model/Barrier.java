@@ -38,7 +38,7 @@ public class Barrier
 		center.disableDrop();
 		if (shape.equals("Circular")) 
 		{
-			int radius = 4;
+			int radius = 20;
 			// set velocity of related single drops to zero, radius is set to 4 by default
 			// disable drops of a circular shape
 			for (int i = -radius + 1; i <= radius - 1; i++) 
@@ -57,7 +57,7 @@ public class Barrier
 		{
 			// set velcocity of related single drops to zero
 			// disable drops of a rectangular shape
-			int sideLength = 10;
+			int sideLength = 20;
 			for (int i = -sideLength; i <= sideLength; i++) 
 			{
 				for (int j = -sideLength; j <= sideLength; j++) 
