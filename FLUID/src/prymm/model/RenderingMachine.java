@@ -1,5 +1,7 @@
 package prymm.model;
 
+import java.util.Arrays;
+
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -10,6 +12,8 @@ import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
+
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 
 import prymm.controller.StateController;
 import prymm.controller.UsrDataConfig;
@@ -423,14 +427,21 @@ public class RenderingMachine implements Runnable{
 				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
-				ImageData md = new ImageData(360, 100, 24, paletteData);
+				ImageData md = new ImageData(width, height, 24, paletteData);
 				for(int x = 0; x < md.width; x++){
 			        for(int y = 0; y < md.height; y++){
-//			        	hue = (float) ((2.0/3) * (1 - x * 1.0/360));
+			        	if(hue > 360)
+			        	{
+			        		hue = 0;
+			        	}
+//			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
 			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
 			        	md.setPixel(x, y, pixel);
+			        	System.out.println(hue);
+			        	hue = (float) (density[x][y] * 100);
+//			        	hue += 360f / md.width;
 			        }
-			        hue += 360f / md.width;
+//			        hue += 360f / md.width;
 //			        hue += 0.03 * Math.sin(6*Math.PI*hue);
 			    }
 	        	try {

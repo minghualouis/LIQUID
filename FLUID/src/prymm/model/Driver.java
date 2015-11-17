@@ -10,7 +10,7 @@ import prymm.gui.WelcomePage;
  */
 public class Driver {
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -25,8 +25,9 @@ public class Driver {
 			window.setCurrentPage(window);
 			window.open();
 			
-			
-		} catch (Exception e) {
+		} 
+		catch (Exception e)
+		{
 			e.printStackTrace();
 		}
 	}

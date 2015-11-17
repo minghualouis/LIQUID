@@ -118,11 +118,12 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		Composite fluidDisplayComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		fluidDisplayComp.setLayout(new FillLayout(SWT.HORIZONTAL));
+		fluidDisplayComp.setBounds(0, 0, 800, 320);
 		
 		canvas = new Canvas(fluidDisplayComp, SWT.NONE);
 		canvas.setLayout(new FillLayout(SWT.HORIZONTAL));
 		canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
-		canvas.setBounds(0, 0, 800, 320);
+		
 //		canvas.setBackground(display.getSystemColor(SWT.COLOR_BLUE));
 		
 		Composite userControlComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);

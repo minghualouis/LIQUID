@@ -31,6 +31,12 @@ public class GeneralTest {
 	}
 	
 	@Test
+	public void testMod() {
+		// TODO Auto-generated method stub
+		int[] a = new int[]{19,83, 46, 87,  5, 64, 21, 4, 60, 27, 43, 81, 96, 7 ,37, 12, 63, 18, 56, 13, 59, 86, 26, 53, 76, 92, 36, 25, 49};
+	
+	}
+	@Test
 	public void testArrayBound()
 	{
 		int[] a = new int[]{1,2,3};
