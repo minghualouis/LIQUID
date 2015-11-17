@@ -425,7 +425,6 @@ public class RenderingMachine implements Runnable{
 			    float hue = 0; // range is 0-360
 			    int pixel;
 				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
-				System.out.println("Height of canvas  : " + height + " Width : " + width);
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
 			        	//Check barrier and set black if barrier
@@ -436,6 +435,7 @@ public class RenderingMachine implements Runnable{
 			        		//hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
 				        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        		pixel = (int) (0xffb200 * ((alldrops[x][y].getDensity())+1));
+//			        		pixel = (int) (0xffb200 * ((curl[x][y])+1));
 			        		
 			        	}
 			        	
