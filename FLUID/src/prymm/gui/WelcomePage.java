@@ -47,7 +47,7 @@ public class WelcomePage extends FluidDefaultPage{
 	protected Shell shlFluidDynamicSimulation;
 //	private Display display;
 	
-	private Button runButton, stopButton, resetButton, btnAddPipeEntry, btnAddPipeExit, getLogButton, btnReplay, btnBrowseFile;
+	private Button runButton, stopButton, resetButton, btnAddPipeEntry, btnAddPipeExit, getLogButton, btnBrowseFile;
 	
 	private Combo comboFluidType, barrierShape, initialForceDirection, containerSize;
 	
@@ -55,7 +55,9 @@ public class WelcomePage extends FluidDefaultPage{
 	private Text tempText;
 	private Text speedText;
 	private Text viscoText;
+	private Text fileText;
 
+	UsrDataConfig usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 	/**
 	 * @wbp.parser.entryPoint
 	 */
@@ -83,7 +85,7 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Should also update these configuration in UI
 		 */
-		UsrDataConfig usrcDataConfig = UsrDataConfig.getUsrDataConfig();
+		usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 		// barrier setting
 		usrcDataConfig.setBarrierShape("Rectangular");
 		// container size setting
@@ -121,6 +123,7 @@ public class WelcomePage extends FluidDefaultPage{
 		fluidDisplayComp.setBounds(0, 0, 800, 320);
 		
 		canvas = new Canvas(fluidDisplayComp, SWT.NONE);
+		canvas.setEnabled(false);
 		canvas.setLayout(new FillLayout(SWT.HORIZONTAL));
 		canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 		
@@ -130,32 +133,39 @@ public class WelcomePage extends FluidDefaultPage{
 		userControlComp.setLayout(new GridLayout(1, false));
 		
 		Group grpLogReplay = new Group(userControlComp, SWT.NONE);
-		grpLogReplay.setLayout(new GridLayout(6, false));
+		grpLogReplay.setLayout(new GridLayout(5, false));
 		GridData gd_grpLogReplay = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
 		gd_grpLogReplay.heightHint = 30;
 		grpLogReplay.setLayoutData(gd_grpLogReplay);
 		grpLogReplay.setText("Log / SIM Replay");
 		grpLogReplay.setBounds(0, 0, 70, 82);
 		new Label(grpLogReplay, SWT.NONE);
-		new Label(grpLogReplay, SWT.NONE);
-		new Label(grpLogReplay, SWT.NONE);
 		
 		getLogButton = new Button(grpLogReplay, SWT.NONE);
-
-		getLogButton.setEnabled(false);
-		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		getLogButton.setText("Get Log");
 		
-		btnReplay = new Button(grpLogReplay, SWT.CHECK);
-
-		btnReplay.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, true, false, 1, 1));
-		btnReplay.setText("Replay?");
+				getLogButton.setEnabled(false);
+				getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+				getLogButton.setText("Get Log");
+				getLogButton.addSelectionListener(new SelectionAdapter() 
+				{
+					@Override
+					public void widgetSelected(SelectionEvent arg0) 
+					{
+						if (getLogButton.isEnabled()) 
+						{
+							
+						}
+					}
+				});
+		new Label(grpLogReplay, SWT.NONE);
 		
 		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
+		btnBrowseFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		btnBrowseFile.setText("Browse File For Replay");
+				
+		fileText = new Text(grpLogReplay, SWT.BORDER);
+		fileText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 
-		btnBrowseFile.setEnabled(false);
-		btnBrowseFile.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-		btnBrowseFile.setText("Browse File");
 		
 		Group grpFluidSettings = new Group(userControlComp, SWT.NONE);
 		grpFluidSettings.setLayout(new GridLayout(8, false));
@@ -164,6 +174,7 @@ public class WelcomePage extends FluidDefaultPage{
 		grpFluidSettings.setLayoutData(gd_grpFluidSettings);
 		grpFluidSettings.setText("Fluid Settings");
 		grpFluidSettings.setBounds(0, 0, 70, 82);
+		
 		
 		comboFluidType = new Combo(grpFluidSettings, SWT.NONE);
 
@@ -208,6 +219,7 @@ public class WelcomePage extends FluidDefaultPage{
 		tempText.setText(tempScale.getSelection() + "");
 		
 		barrierShape = new Combo(grpFluidSettings, SWT.NONE);
+
 		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		barrierShape.setItems(new String[] {"Rectangular", "Circular"});
 		barrierShape.setBounds(0, 0, 91, 23);
@@ -217,6 +229,7 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		initialForceDirection = new Combo(grpFluidSettings, SWT.NONE);
+
 		initialForceDirection.setItems(new String[] {"Left", "Right", "Top", "Bottom"});
 		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		initialForceDirection.setText("Select Initial Force");
@@ -235,6 +248,7 @@ public class WelcomePage extends FluidDefaultPage{
 		speedText.setText(speedScale.getSelection() + "");
 		
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
+
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		containerSize.setItems(new String[] {"659 x 290","200 x 80", "300 x 120", "600 x 240"});
 		containerSize.setBounds(0, 0, 91, 23);
@@ -244,10 +258,13 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		btnAddPipeEntry = new Button(grpFluidSettings, SWT.CHECK);
+
 		btnAddPipeEntry.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnAddPipeEntry.setText("Add Pipe Entry");
 		
 		btnAddPipeExit = new Button(grpFluidSettings, SWT.CHECK);
+
+		btnAddPipeExit.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 		btnAddPipeExit.setText("Add Pipe Exit");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
@@ -283,6 +300,35 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Event define area
 		 */
+		
+		
+		
+		/**
+		 * Browse file button
+		 */
+		btnBrowseFile.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				if (btnBrowseFile.isEnabled())
+				{
+					FileDialog fileChooser = new FileDialog(shlFluidDynamicSimulation, SWT.OpenDocument);
+					String resultFile = fileChooser.open();
+					if (resultFile != null) 
+					{
+						isReplay = true;
+						replayFileName = resultFile;
+						fileText.setText(resultFile);
+						MessageBox replayBox = new MessageBox(shlFluidDynamicSimulation, SWT.ICON_INFORMATION);
+						replayBox.setMessage("Replay file path is " + resultFile + "\nReplay mode is selected. Configuration of fluid is not allowed");
+						replayBox.open();
+						grpFluidSettings.setEnabled(false);
+					}
+				}
+			}
+		});
+		
 		
 		
 		/**
@@ -357,31 +403,16 @@ public class WelcomePage extends FluidDefaultPage{
 		});
 		
 		/**
-		 * Replay button event definition
+		 * reset button event definition
 		 */
-		btnReplay.addSelectionListener(new SelectionAdapter() 
+		resetButton.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
 			public void widgetSelected(SelectionEvent arg0) 
 			{
-				boolean replay = btnReplay.getSelection();
-				if (replay) 
-				{
-					btnBrowseFile.setEnabled(true);
-				}
-				else {
-					btnBrowseFile.setEnabled(false);
-				}
-				
-			}
-		});
-		
-		/**
-		 * reset button event definition
-		 */
-		resetButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent arg0) {
+				grpFluidSettings.setEnabled(true);
+				fileText.setText("");
+				initalFlow();
 			}
 		});
 		
@@ -389,43 +420,10 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * If replay is enabled, create file chooser for user to select imported file
 		 */
-		btnBrowseFile.addSelectionListener(new SelectionAdapter() 
-		{
-			@Override
-			public void widgetSelected(SelectionEvent arg0) 
-			{
-				if (btnBrowseFile.isEnabled())
-				{
-					FileDialog fileChooser = new FileDialog(shlFluidDynamicSimulation, SWT.OpenDocument);
-					String resultFile = fileChooser.open();
-					if (resultFile != null) 
-					{
-						isReplay = true;
-						replayFileName = resultFile;
-					}
-				}
-			}
-		});
 		
 		/**
 		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
 		 */
-		getLogButton.addSelectionListener(new SelectionAdapter() 
-		{
-			@Override
-			public void widgetSelected(SelectionEvent arg0) 
-			{
-//				File logFile = new File(logFileName);
-//				if(StateController.getCurrentState() == StateController.TERMINAL && logFile.exists())
-//				{
-//					
-//				}
-				if (getLogButton.isEnabled()) 
-				{
-					
-				}
-			}
-		});
 		
 		/**
 		 * Stop button operation
@@ -478,6 +476,7 @@ public class WelcomePage extends FluidDefaultPage{
 						
 					}
 				}
+				usrcDataConfig.setTemperature(tempScale.getSelection() + "");
 			}
 		});
 		
@@ -494,6 +493,7 @@ public class WelcomePage extends FluidDefaultPage{
 //				speedText.setText(String.format("%.3f", currentSelectedSpeed));
 				int currentSelectedSpeed = speedScale.getSelection();
 				speedText.setText(currentSelectedSpeed + "");
+				usrcDataConfig.setViscosity(speedScale.getSelection() + "");
 			}
 		});
 		
@@ -511,6 +511,7 @@ public class WelcomePage extends FluidDefaultPage{
 				//0.005-0.200 -> [5-200] -> [1,40]
 				double currentViscosity = viscosityScale.getSelection() * 5.0 / 1000;
 				viscoText.setText(String.format("%.3f", currentViscosity));
+				usrcDataConfig.setViscosity(viscosityScale.getSelection() + "");
 			}	
 		});
 		
@@ -526,18 +527,91 @@ public class WelcomePage extends FluidDefaultPage{
 					// enable viscosity widgets
 					viscosityScale.setEnabled(true);
 					viscoText.setEnabled(true);
+					usrcDataConfig.setFluidType(comboFluidType.getText());
+					
 				}
 				else 
 				{
 					// disable viscosity widgets
 					viscosityScale.setEnabled(false);
 					viscoText.setEnabled(false);
+					usrcDataConfig.setFluidType(comboFluidType.getText());
 				}
 			}
 		});
 		
 		/**
-		 * viscoText 
+		 * Fluid barrier shape selection
 		 */
+		barrierShape.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				usrcDataConfig.setBarrierShape(barrierShape.getText());
+			}
+		});
+		
+		/**
+		 * container size selection
+		 */
+		containerSize.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				usrcDataConfig.setContainerSize(containerSize.getText());
+			}
+		});
+		
+		/**
+		 * Initial force direction settings
+		 */
+		initialForceDirection.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				usrcDataConfig.setInitialForce(initialForceDirection.getText());
+			}
+		});
+		
+		/**
+		 * Pipe entry settings
+		 */
+		btnAddPipeEntry.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				if(btnAddPipeEntry.getSelection())
+				{
+					usrcDataConfig.setEntryAdded(true);
+				}
+				else
+				{
+					usrcDataConfig.setEntryAdded(false);
+				}
+			}
+		});
+		
+		/**
+		 * Pipe Exit settings
+		 */
+		btnAddPipeExit.addSelectionListener(new SelectionAdapter()
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				if (btnAddPipeExit.getSelection())
+				{
+					usrcDataConfig.setExitAdded(true);
+				}
+				else 
+				{
+					usrcDataConfig.setExitAdded(false);
+				}
+			}
+		});
 	}
 }
