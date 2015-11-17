@@ -25,6 +25,11 @@ public class InitialForce {
 			{
 				allDrops2[0][i].setxVel(speed);
 			}
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
+			{
+				allDrops2[i][0].disableDrop();
+				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth()].disableDrop();
+			}
 			break;
 			
 		case Flow.RIGHT:
@@ -32,6 +37,11 @@ public class InitialForce {
 			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
 			{
 				allDrops2[UsrDataConfig.getUsrDataConfig().getLength()][i].setxVel(-speed);
+			}
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
+			{
+				allDrops2[i][0].disableDrop();
+				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth()].disableDrop();
 			}
 			break;
 
@@ -41,12 +51,22 @@ public class InitialForce {
 			{
 				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth()].setyVel(speed);
 			}
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
+			{
+				allDrops2[0][i].disableDrop();
+				allDrops2[UsrDataConfig.getUsrDataConfig().getLength()][i].disableDrop();
+			}
 			break;
 
 		case Flow.BOTTOM:
 			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
 			{
 				allDrops2[i][0].setyVel(-speed);
+			}
+			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
+			{
+				allDrops2[0][i].disableDrop();
+				allDrops2[UsrDataConfig.getUsrDataConfig().getLength()][i].disableDrop();
 			}
 			break;
 		default:

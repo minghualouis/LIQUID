@@ -166,6 +166,7 @@ public class WelcomePage extends FluidDefaultPage{
 		grpFluidSettings.setBounds(0, 0, 70, 82);
 		
 		comboFluidType = new Combo(grpFluidSettings, SWT.NONE);
+
 		GridData gd_comboFluidType = new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1);
 		gd_comboFluidType.widthHint = 137;
 		comboFluidType.setLayoutData(gd_comboFluidType);
@@ -179,7 +180,8 @@ public class WelcomePage extends FluidDefaultPage{
 		lblViscosity.setText("Viscosity");
 		
 		viscoText = new Text(grpFluidSettings, SWT.BORDER);
-		viscoText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		viscoText.setEnabled(false);
+		viscoText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		viscosityScale = new Scale(grpFluidSettings, SWT.NONE);
 		viscosityScale.setMaximum(40);
@@ -196,7 +198,7 @@ public class WelcomePage extends FluidDefaultPage{
 		lblTemperature.setText("Temperature");
 		
 		tempText = new Text(grpFluidSettings, SWT.BORDER);
-		tempText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		tempText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		tempScale = new Scale(grpFluidSettings, SWT.NONE);
 		tempScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
@@ -224,7 +226,7 @@ public class WelcomePage extends FluidDefaultPage{
 		lblInitialSpeed.setText("Initial Speed");
 		
 		speedText = new Text(grpFluidSettings, SWT.BORDER);
-		speedText.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
+		speedText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
 		
 		Scale speedScale = new Scale(grpFluidSettings, SWT.NONE);
 		speedScale.setMaximum(120);
@@ -273,6 +275,7 @@ public class WelcomePage extends FluidDefaultPage{
 		stopButton.setText("Stop");
 		
 		resetButton = new Button(grpControlPanel, SWT.NONE);
+
 		resetButton.setLayoutData(new RowData(100, SWT.DEFAULT));
 		resetButton.setText("Reset");
 
@@ -308,6 +311,10 @@ public class WelcomePage extends FluidDefaultPage{
 						if(!stopButton.isEnabled())
 						{
 							stopButton.setEnabled(true);
+						}
+						if(resetButton.isEnabled())
+						{
+							resetButton.setEnabled(false);
 						}
 						try 
 						{
@@ -370,69 +377,14 @@ public class WelcomePage extends FluidDefaultPage{
 		});
 		
 		/**
-		 * Check temperature according to the type of fluid that user configured
+		 * reset button event definition
 		 */
-		tempScale.addSelectionListener(new SelectionAdapter() 
-		{
+		resetButton.addSelectionListener(new SelectionAdapter() {
 			@Override
-			public void widgetSelected(SelectionEvent arg0) 
-			{
-				int currentSelectedTemp = tempScale.getSelection();
-				tempText.setText(currentSelectedTemp + "");
-				
-				String fluidType = comboFluidType.getText();
-				if ("Water".equals(fluidType)) 
-				{
-					if (tempScale.getSelection() <= 0 || tempScale.getSelection() > 100) 
-					{
-						MessageBox messageBox = new MessageBox(shlFluidDynamicSimulation, SWT.ICON_ERROR);
-						messageBox.setMessage("Temperature should not be configured below 0 for fluid water");
-						int rc = messageBox.open();
-						switch (rc) {
-						case SWT.OK:
-							tempScale.setSelection(50);
-							break;
-
-						default:
-							tempScale.setSelection(50);
-							break;
-						}
-						
-					}
-				}
+			public void widgetSelected(SelectionEvent arg0) {
 			}
 		});
 		
-		/**
-		 * speed scale listener
-		 */
-		speedScale.addSelectionListener(new SelectionAdapter() 
-		{
-			@Override
-			public void widgetSelected(SelectionEvent arg0) 
-			{
-				//0.000-0.120 -> [0,120]
-				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
-				speedText.setText(String.format("%.3f", currentSelectedSpeed));
-			}
-		});
-		
-
-		
-		/**
-		 * Viscosity Scale
-		 */
-		viscosityScale.addSelectionListener(new SelectionAdapter() 
-		{
-
-			@Override
-			public void widgetSelected(SelectionEvent arg0) 
-			{
-				//0.005-0.200 -> [5-200] -> [1,40]
-				double currentViscosity = viscosityScale.getSelection() * 5.0 / 1000;
-				viscoText.setText(String.format("%.3f", currentViscosity));
-			}	
-		});
 		
 		/**
 		 * If replay is enabled, create file chooser for user to select imported file
@@ -476,11 +428,6 @@ public class WelcomePage extends FluidDefaultPage{
 		});
 		
 		/**
-		 * Canvas operation
-		 */
-//		canvas.addPaintListener();
-		
-		/**
 		 * Stop button operation
 		 */
 		stopButton.addSelectionListener(new SelectionAdapter() 
@@ -491,8 +438,106 @@ public class WelcomePage extends FluidDefaultPage{
 				if(stopButton.isEnabled() )
 				{
 					UsrDataProcessor.stopExecution();
+					if (runButton.isEnabled()) 
+					{
+						runButton.setEnabled(false);
+					}
 				}
 			}
 		});
+		
+		
+		/**
+		 * Check temperature according to the type of fluid that user configured
+		 */
+		tempScale.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				int currentSelectedTemp = tempScale.getSelection();
+				tempText.setText(currentSelectedTemp + "");
+				
+				String fluidType = comboFluidType.getText();
+				if ("Water".equals(fluidType)) 
+				{
+					if (tempScale.getSelection() <= 0 || tempScale.getSelection() > 100) 
+					{
+						MessageBox messageBox = new MessageBox(shlFluidDynamicSimulation, SWT.ICON_ERROR);
+						messageBox.setMessage("Temperature should not be configured below 0 for fluid water");
+						int rc = messageBox.open();
+						switch (rc) {
+						case SWT.OK:
+							tempScale.setSelection(50);
+							break;
+
+						default:
+							tempScale.setSelection(50);
+							break;
+						}
+						
+					}
+				}
+			}
+		});
+		
+		/**
+		 * speed scale listener
+		 */
+		speedScale.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				//0.000-0.120 -> [0,120]
+//				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
+//				speedText.setText(String.format("%.3f", currentSelectedSpeed));
+				int currentSelectedSpeed = speedScale.getSelection();
+				speedText.setText(currentSelectedSpeed + "");
+			}
+		});
+		
+
+		
+		/**
+		 * Viscosity Scale
+		 */
+		viscosityScale.addSelectionListener(new SelectionAdapter() 
+		{
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				//0.005-0.200 -> [5-200] -> [1,40]
+				double currentViscosity = viscosityScale.getSelection() * 5.0 / 1000;
+				viscoText.setText(String.format("%.3f", currentViscosity));
+			}	
+		});
+		
+		/**
+		 * fluid type selection
+		 */
+		comboFluidType.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent arg0)
+			{
+				if ("User Defined".equals(comboFluidType.getText())) 
+				{
+					// enable viscosity widgets
+					viscosityScale.setEnabled(true);
+					viscoText.setEnabled(true);
+				}
+				else 
+				{
+					// disable viscosity widgets
+					viscosityScale.setEnabled(false);
+					viscoText.setEnabled(false);
+				}
+			}
+		});
+		
+		/**
+		 * viscoText 
+		 */
 	}
 }

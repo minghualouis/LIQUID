@@ -57,7 +57,7 @@ public class Barrier
 		{
 			// set velcocity of related single drops to zero
 			// disable drops of a rectangular shape
-			int sideLength = 4;
+			int sideLength = 10;
 			for (int i = -sideLength; i <= sideLength; i++) 
 			{
 				for (int j = -sideLength; j <= sideLength; j++) 

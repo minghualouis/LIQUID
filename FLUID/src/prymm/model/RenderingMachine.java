@@ -433,7 +433,6 @@ public class RenderingMachine implements Runnable{
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
 						hue = (float) ( (220 * density[x][y] + 0.5));
 						int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
-			        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        	md.setPixel(x, y, pixel);
 			        }
 		        	try {
