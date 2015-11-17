@@ -404,8 +404,6 @@ public class RenderingMachine implements Runnable{
 			{
 				Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
 				GC gc = new GC(currentCanvas);
-				int height = currentCanvas.getClientArea().height;
-				int width = currentCanvas.getClientArea().width;
 				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 				
@@ -423,9 +421,9 @@ public class RenderingMachine implements Runnable{
 			        		hue = 0;
 			        	}
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
-						hue = (float) ( (220 * density[x][y]+0.5));
-						System.out.println("Height of canvas  : " + height + " Width : " + width);
-	
+						hue = (float) ( (220 * density[x][y] + 0.9));
+						int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
+			        	md.setPixel(x, y, pixel);
 			        }
 		        	try {
 						Thread.sleep(1);
@@ -436,7 +434,7 @@ public class RenderingMachine implements Runnable{
 				    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
 				    gc.drawImage(image, 0, 0);
 				    image.dispose();
-			}
+				}
 			}
 		});
 		
