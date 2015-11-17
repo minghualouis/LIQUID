@@ -1,7 +1,5 @@
 package prymm.model;
 
-import java.util.Arrays;
-
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -397,16 +395,18 @@ public class RenderingMachine implements Runnable{
 		/**
 		 * draw to the canvas
 		 */
+		
 		FluidDefaultPage.getCurrentPage().getDisplay().asyncExec(new Runnable() 
 		{
 			@Override
 			public void run() 
 			{
+				
 				Canvas currentCanvas = FluidDefaultPage.getCurrentPage().getCanvas();
 				GC gc = new GC(currentCanvas);
 				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
-				
+				SingleDrop[][] alldrops = currentFlow.getAllDrops();
 				if(Driver.DEBUG)
 				{
 					System.out.println("Height of canvas is : " + ydim + " Width is: " + xdim);
@@ -423,6 +423,9 @@ public class RenderingMachine implements Runnable{
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
 						hue = (float) ( (220 * density[x][y] + 0.9));
 						int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
+			        	hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
+			        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
+			        	if(hue > 360 || hue < 0)hue = 0;
 			        	md.setPixel(x, y, pixel);
 			        }
 		        	try {
@@ -435,9 +438,17 @@ public class RenderingMachine implements Runnable{
 				    gc.drawImage(image, 0, 0);
 				    image.dispose();
 				}
+	        	try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
+			    gc.drawImage(image, 0, 0);
+			    image.dispose();
 			}
 		});
-		
 	}
 	
 	public void run() {
