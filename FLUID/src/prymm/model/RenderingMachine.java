@@ -176,7 +176,6 @@ public class RenderingMachine implements Runnable{
 					vy2 = vy * vy;
 					vxvy2 = 2 * vx * vy;
 					v2 = vx2 + vy2;
-					//speed2[x][y] = v2;	//ys9:not needed for us	// may be needed for plotting
 					v215 = 1.5 * v2;
 					double temp;
 					temp = alldrops[x][y].getDots()[1][1].getVal();
@@ -392,19 +391,7 @@ public class RenderingMachine implements Runnable{
 //		if(Driver.DEBUG)
 //		{
 //			System.out.println("Size is " + height + ": " + width);
-//		}
-		// canvas which need for rendering result to UI
-		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
-		
-		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
-		{
-			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
-			{
-				density[i][j] = curentDrops[i][j].getDensity();
-
-			}
-		}
-		
+//		}		
 		/**
 		 * draw to the canvas
 		 */
@@ -417,24 +404,30 @@ public class RenderingMachine implements Runnable{
 				GC gc = new GC(currentCanvas);
 				int height = currentCanvas.getClientArea().height;
 				int width = currentCanvas.getClientArea().width;
+				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
+				SingleDrop[][] alldrops = currentFlow.getAllDrops();
 				if(Driver.DEBUG)
 				{
-					System.out.println("Height of canvas is : " + height + " Width is: " + width);
+					System.out.println("Height of canvas is : " + ydim + " Width is: " + xdim);
 				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
-				ImageData md = new ImageData(360, 100, 24, paletteData);
-				for(int x = 0; x < md.width; x++){
-			        for(int y = 0; y < md.height; y++){
+				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
+				System.out.println("Height of canvas  : " + height + " Width : " + width);
+				for(int x = 0; x < xdim; x++){
+			        for(int y = 0; y < ydim; y++){
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/360));
+			        	hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
+			        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
 			        	md.setPixel(x, y, pixel);
 			        }
-			        hue += 360f / md.width;
-//			        hue += 0.03 * Math.sin(6*Math.PI*hue);
+			        //hue += 360f / md.width;
+			        //hue += 0.03 * Math.sin(6*Math.PI*hue);
 			    }
 	        	try {
-					Thread.sleep(500);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -460,7 +453,7 @@ public class RenderingMachine implements Runnable{
 					this.renderingCanvas();
 				}
 				try 
-					{Thread.sleep(2000);
+					{Thread.sleep(1);
 					} catch (InterruptedException e) {
 						
 					}
