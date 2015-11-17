@@ -178,7 +178,6 @@ public class RenderingMachine implements Runnable{
 					vy2 = vy * vy;
 					vxvy2 = 2 * vx * vy;
 					v2 = vx2 + vy2;
-					//speed2[x][y] = v2;	//ys9:not needed for us	// may be needed for plotting
 					v215 = 1.5 * v2;
 					double temp;
 					temp = alldrops[x][y].getDots()[1][1].getVal();
@@ -394,19 +393,7 @@ public class RenderingMachine implements Runnable{
 //		if(Driver.DEBUG)
 //		{
 //			System.out.println("Size is " + height + ": " + width);
-//		}
-		// canvas which need for rendering result to UI
-		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
-		
-		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
-		{
-			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
-			{
-				density[i][j] = curentDrops[i][j].getDensity();
-
-			}
-		}
-		
+//		}		
 		/**
 		 * draw to the canvas
 		 */
@@ -437,26 +424,22 @@ public class RenderingMachine implements Runnable{
 			        	}
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
 						hue = (float) ( (220 * density[x][y]+0.5));
-			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
-			        	md.setPixel(x, y, pixel);
-			        	//System.out.println(hue);
-			        	//hue = (float) (density[x][y] * 100);
-//			        	hue += 360f / md.width;
+						System.out.println("Height of canvas  : " + height + " Width : " + width);
+	
 			        }
-//			        hue += 360f / md.width;
-//			        hue += 0.03 * Math.sin(6*Math.PI*hue);
-			    }
-	        	try {
-					Thread.sleep(1);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
-			    gc.drawImage(image, 0, 0);
-			    image.dispose();
+		        	try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
+				    gc.drawImage(image, 0, 0);
+				    image.dispose();
+			}
 			}
 		});
+		
 	}
 	
 	public void run() {
@@ -473,7 +456,7 @@ public class RenderingMachine implements Runnable{
 					this.renderingCanvas();
 				}
 				try 
-					{Thread.sleep(2000);
+					{Thread.sleep(1);
 					} catch (InterruptedException e) {
 						
 					}
