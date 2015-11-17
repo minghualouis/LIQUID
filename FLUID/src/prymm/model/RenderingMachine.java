@@ -13,8 +13,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.widgets.Canvas;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import prymm.controller.StateController;
 import prymm.controller.UsrDataConfig;
 import prymm.gui.FluidDefaultPage;
@@ -421,31 +419,35 @@ public class RenderingMachine implements Runnable{
 				GC gc = new GC(currentCanvas);
 				int height = currentCanvas.getClientArea().height;
 				int width = currentCanvas.getClientArea().width;
+				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
+				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
+				
 				if(Driver.DEBUG)
 				{
-					System.out.println("Height of canvas is : " + height + " Width is: " + width);
+					System.out.println("Height of canvas is : " + ydim + " Width is: " + xdim);
 				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
-				ImageData md = new ImageData(width, height, 24, paletteData);
-				for(int x = 0; x < md.width; x++){
-			        for(int y = 0; y < md.height; y++){
+				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
+				for(int x = 0; x < xdim; x++){
+			        for(int y = 0; y < ydim; y++){
 			        	if(hue > 360)
 			        	{
 			        		hue = 0;
 			        	}
 //			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
+						hue = (float) ( (220 * density[x][y]+0.5));
 			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
 			        	md.setPixel(x, y, pixel);
-			        	System.out.println(hue);
-			        	hue = (float) (density[x][y] * 100);
+			        	//System.out.println(hue);
+			        	//hue = (float) (density[x][y] * 100);
 //			        	hue += 360f / md.width;
 			        }
 //			        hue += 360f / md.width;
 //			        hue += 0.03 * Math.sin(6*Math.PI*hue);
 			    }
 	        	try {
-					Thread.sleep(500);
+					Thread.sleep(1);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
