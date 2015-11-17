@@ -392,6 +392,16 @@ public class RenderingMachine implements Runnable{
 //		{
 //			System.out.println("Size is " + height + ": " + width);
 //		}		
+		SingleDrop[][] curentDrops = currentFlow.getAllDrops();
+		
+		for(int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++)
+		{
+			for (int j = 0; j < UsrDataConfig.getUsrDataConfig().getWidth(); j++)
+			{
+				density[i][j] = curentDrops[i][j].getDensity();
+
+			}
+		}
 		/**
 		 * draw to the canvas
 		 */
