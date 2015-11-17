@@ -143,20 +143,10 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		getLogButton = new Button(grpLogReplay, SWT.NONE);
 		
-				getLogButton.setEnabled(false);
-				getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-				getLogButton.setText("Get Log");
-				getLogButton.addSelectionListener(new SelectionAdapter() 
-				{
-					@Override
-					public void widgetSelected(SelectionEvent arg0) 
-					{
-						if (getLogButton.isEnabled()) 
-						{
-							
-						}
-					}
-				});
+		getLogButton.setEnabled(false);
+		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		getLogButton.setText("Get Log");
+			
 		new Label(grpLogReplay, SWT.NONE);
 		
 		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
@@ -416,14 +406,32 @@ public class WelcomePage extends FluidDefaultPage{
 			}
 		});
 		
-		
-		/**
-		 * If replay is enabled, create file chooser for user to select imported file
-		 */
+
 		
 		/**
 		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
 		 */
+		getLogButton.setEnabled(true);
+		getLogButton.addSelectionListener(new SelectionAdapter() 
+		{
+			@Override
+			public void widgetSelected(SelectionEvent arg0) 
+			{
+				
+				if (getLogButton.isEnabled()) 
+				{
+					FileDialog logFileDialog = new FileDialog(shlFluidDynamicSimulation, SWT.SAVE);
+					logFileDialog.setFilterNames(new String[]{"Log Files", "All Files (*.*)"});
+					logFileDialog.setFilterExtensions(new String[] {"*.log", "*.*"});
+//					logFileDialog.setFilterPath("c:\\");
+					logFileDialog.setFileName("FluidLog.log");
+					String fullName = logFileDialog.open();
+					
+					// Output the log accoring to fullName
+					
+				}
+			}
+		});
 		
 		/**
 		 * Stop button operation

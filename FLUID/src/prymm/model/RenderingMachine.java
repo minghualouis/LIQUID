@@ -423,6 +423,9 @@ public class RenderingMachine implements Runnable{
 				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
+			    /**
+			     * ImageData should contains number of pixels same as singledots not singledrops
+			     */
 				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
