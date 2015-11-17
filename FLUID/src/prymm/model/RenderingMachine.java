@@ -1,7 +1,5 @@
 package prymm.model;
 
-import java.util.Arrays;
-
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
@@ -408,7 +406,7 @@ public class RenderingMachine implements Runnable{
 				int width = currentCanvas.getClientArea().width;
 				int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 				int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
-				
+				SingleDrop[][] alldrops = currentFlow.getAllDrops();
 				if(Driver.DEBUG)
 				{
 					System.out.println("Height of canvas is : " + ydim + " Width is: " + xdim);
@@ -416,30 +414,29 @@ public class RenderingMachine implements Runnable{
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
 				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
+				System.out.println("Height of canvas  : " + height + " Width : " + width);
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
-			        	if(hue > 360)
-			        	{
-			        		hue = 0;
-			        	}
-//			        	hue = (float) ((2.0/3) * (1 - x * 1.0/width));
-						hue = (float) ( (220 * density[x][y]+0.5));
-						System.out.println("Height of canvas  : " + height + " Width : " + width);
-	
+			        	hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
+			        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
+			        	if(hue > 360 || hue < 0)hue = 0;
+			        	int pixel = paletteData.getPixel(new RGB(hue, 1f, 1f));
+			        	md.setPixel(x, y, pixel);
 			        }
-		        	try {
-						Thread.sleep(1);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
-				    gc.drawImage(image, 0, 0);
-				    image.dispose();
-			}
+			        //hue += 360f / md.width;
+			        //hue += 0.03 * Math.sin(6*Math.PI*hue);
+			    }
+	        	try {
+					Thread.sleep(1);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			    Image image = new Image(FluidDefaultPage.getCurrentPage().getDisplay(), md);
+			    gc.drawImage(image, 0, 0);
+			    image.dispose();
 			}
 		});
-		
 	}
 	
 	public void run() {
