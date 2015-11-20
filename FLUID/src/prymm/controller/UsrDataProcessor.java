@@ -116,14 +116,29 @@ public class UsrDataProcessor
 		}
 	}
 	
-	
-	
+	/**
+	 * For replay use
+	 */
+	public static void replay()
+	{
+		if(StateController.getCurrentState() == StateController.INITIAL)
+		{
+			UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+			retriveForReplay(usrData);
+			StateController.setCurrentState(StateController.IDLE);
+		}
+	}
 	
 	
 	
 	/**INTERNAL USE**/
 	
 	
+	private static void retriveForReplay(UsrDataConfig usrData) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	/**
 	 *  Used when state is idle
 	 *  When user 

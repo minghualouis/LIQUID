@@ -352,6 +352,8 @@ public class WelcomePage extends FluidDefaultPage{
 						{
 							resetButton.setEnabled(false);
 						}
+						// not allowing user to configure during execution
+						grpFluidSettings.setEnabled(false);
 						try 
 						{
 							UsrDataProcessor.processUsrData();
@@ -621,5 +623,7 @@ public class WelcomePage extends FluidDefaultPage{
 				}
 			}
 		});
+		
+		
 	}
 }
