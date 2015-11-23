@@ -21,15 +21,17 @@ public class InitialForce {
 		switch (direction) 
 		{
 		case Flow.LEFT:
+			
 			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
 			{
 				allDrops2[0][i].setxVel(speed);
+				
 			}
-//			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
-//			{
-//				allDrops2[i][0].disableDrop();
-//				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 1].disableDrop();
-//			}
+			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
+			{
+				allDrops2[i][1].disableDrop();
+				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
+			}
 			break;
 			
 		case Flow.RIGHT:
@@ -38,10 +40,10 @@ public class InitialForce {
 			{
 				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 1][i].setxVel(-speed);
 			}
-			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
+			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
 			{
-				allDrops2[i][0].disableDrop();
-				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 1].disableDrop();
+				allDrops2[i][1].disableDrop();
+				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
 			}
 			break;
 
@@ -51,10 +53,10 @@ public class InitialForce {
 			{
 				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 1].setyVel(speed);
 			}
-			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
+			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
 			{
-				allDrops2[0][i].disableDrop();
-				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 1][i].disableDrop();
+				allDrops2[1][i].disableDrop();
+				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
 			}
 			break;
 
@@ -63,10 +65,10 @@ public class InitialForce {
 			{
 				allDrops2[i][0].setyVel(-speed);
 			}
-			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getWidth(); i++) 
+			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
 			{
-				allDrops2[0][i].disableDrop();
-				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 1][i].disableDrop();
+				allDrops2[1][i].disableDrop();
+				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
 			}
 			break;
 		default:
@@ -84,55 +86,63 @@ public class InitialForce {
 	public static void updatePipeEntry(int width, int length,
 			SingleDrop[][] allDrops2, int direction) 
 	{
-		int upperSize = width * 2 / 5; // velocity of upper 40% of initial drops should be set zero
-		int downSize = width * 3 / 5; // velocity of lower 40% of initial drops should be set zero
-		int leftSize = length * 2 / 5; // velocity of upper 40% of initial drops should be set zero
-		int rightSize = length * 3 / 5; // velocity of lower 40% of initial drops should be set zero
+		int upperSize = width * 3 / 7; // velocity of upper 40% of initial drops should be set zero
+		int downSize = width * 3 / 7; // velocity of lower 40% of initial drops should be set zero
+		int leftSize = length * 3 / 7; // velocity of upper 40% of initial drops should be set zero
+		int rightSize = length * 4 / 7; // velocity of lower 40% of initial drops should be set zero
 		switch (direction) 
 		{
 		case Flow.LEFT:
 			// let pipe entry be 20% of the width 
-
-			for (int i = width - 1; i >= upperSize; i--) 
-			{
-				allDrops2[0][i].disableDrop();
-			}
-			for (int i = downSize; i >= 0; i--) 
-			{
-				allDrops2[0][i].disableDrop();
+			//Outer loop just to make pipe line thick and visible
+			for(int j=1;j<4;j++){
+				for (int i = width - 2; i >= width-upperSize; i--) 
+				{
+					allDrops2[j][i].disableDrop();
+				}
+				for (int i = downSize; i >= 1; i--) 
+				{
+					allDrops2[j][i].disableDrop();
+				}
 			}
 			break;
 			
 		case Flow.RIGHT:
-			for (int i = width - 1; i >= upperSize; i--) 
-			{
-				allDrops2[length - 1][i].disableDrop();
-			}
-			for (int i = downSize; i >= 0; i--) 
-			{
-				allDrops2[length - 1][i].disableDrop();
+			for(int j=1;j<4;j++){
+				for (int i = width - 2; i >= width -upperSize; i--) 
+				{
+					allDrops2[length - 1-j][i].disableDrop();
+				}
+				for (int i = downSize; i >= 1; i--) 
+				{
+					allDrops2[length - 1-j][i].disableDrop();
+				}
 			}
 			break;
 
 		case Flow.TOP:
-			for (int i = 0; i < leftSize; i++) 
-			{
-				allDrops2[i][width - 1].disableDrop();
+			for(int j=1; j<4; j++){
+				for (int i = 1; i < leftSize; i++) 
+				{
+					allDrops2[i][j].disableDrop();
+				}
+				for (int i = rightSize; i < length -2; i++) 
+				{
+					allDrops2[i][j].disableDrop();
+				}
 			}
-			for (int i = rightSize; i < length - 1; i++) 
-			{
-				allDrops2[i][width - 1].disableDrop();
-			}
-			break;
-
+				break;
+			
 		case Flow.BOTTOM:
-			for (int i = 0; i < leftSize; i++) 
-			{
-				allDrops2[i][0].disableDrop();
-			}
-			for (int i = rightSize; i < length - 1; i++) 
-			{
-				allDrops2[i][0].disableDrop();
+			for(int j=1; j<4; j++){
+				for (int i = 1; i < leftSize; i++) 
+				{
+					allDrops2[i][width - 1- j].disableDrop();
+				}
+				for (int i = rightSize; i < length -2; i++) 
+				{
+					allDrops2[i][width - 1-j].disableDrop();
+				}
 			}
 			break;
 		default:
@@ -150,55 +160,63 @@ public class InitialForce {
 	public static void updatePipeExit(int width, int length,
 			SingleDrop[][] allDrops2, int direction) 
 	{
-		int upperSize = width * 2 / 5; // velocity of upper 40% of initial drops should be set zero
-		int downSize = width * 3 / 5; // velocity of lower 40% of initial drops should be set zero
-		int leftSize = length * 2 / 5; // velocity of upper 40% of initial drops should be set zero
-		int rightSize = length * 3 / 5; // velocity of lower 40% of initial drops should be set zero
+		int upperSize = width * 3 / 7; // velocity of upper 40% of initial drops should be set zero
+		int downSize = width * 3 / 7; // velocity of lower 40% of initial drops should be set zero
+		int leftSize = length * 3 / 7; // velocity of upper 40% of initial drops should be set zero
+		int rightSize = length * 4 / 7; // velocity of lower 40% of initial drops should be set zero
 		switch (direction) 
 		{
 		case Flow.LEFT:
-			for (int i = width - 1; i >= upperSize; i--) 
-			{
-				allDrops2[length - 1][i].disableDrop();
-			}
-			for (int i = downSize; i >= 0; i--) 
-			{
-				allDrops2[length - 1][i].disableDrop();
+			for(int j=1;j<4;j++){
+				for (int i = width - 2; i >= width-upperSize; i--) 
+				{
+					allDrops2[j][i].disableDrop();
+				}
+				for (int i = downSize; i >= 1; i--) 
+				{
+					allDrops2[j][i].disableDrop();
+				}
 			}
 			break;
 			
 		case Flow.RIGHT:
 			// let pipe entry be 20% of the width 
 
-			for (int i = width - 1; i >= upperSize; i--) 
-			{
-				allDrops2[0][i].disableDrop();
-			}
-			for (int i = downSize; i >= 0; i--) 
-			{
-				allDrops2[0][i].disableDrop();
+			for(int j=1;j<4;j++){
+				for (int i = width - 2; i >= width -upperSize; i--) 
+				{
+					allDrops2[length - 1-j][i].disableDrop();
+				}
+				for (int i = downSize; i >= 1; i--) 
+				{
+					allDrops2[length - 1-j][i].disableDrop();
+				}
 			}
 			break;
 
 		case Flow.TOP:
-			for (int i = 0; i < leftSize; i++) 
-			{
-				allDrops2[i][0].disableDrop();
-			}
-			for (int i = rightSize; i < length - 1; i++) 
-			{
-				allDrops2[i][0].disableDrop();
+			for(int j=1; j<4; j++){
+				for (int i = 1; i < leftSize; i++) 
+				{
+					allDrops2[i][j].disableDrop();
+				}
+				for (int i = rightSize; i < length -2; i++) 
+				{
+					allDrops2[i][j].disableDrop();
+				}
 			}
 			break;
 
 		case Flow.BOTTOM:
-			for (int i = 0; i < leftSize; i++) 
-			{
-				allDrops2[i][width - 1].disableDrop();
-			}
-			for (int i = rightSize; i < length - 1; i++) 
-			{
-				allDrops2[i][width - 1].disableDrop();
+			for(int j=1; j<4; j++){
+				for (int i = 1; i < leftSize; i++) 
+				{
+					allDrops2[i][width - 1- j].disableDrop();
+				}
+				for (int i = rightSize; i < length -2; i++) 
+				{
+					allDrops2[i][width - 1-j].disableDrop();
+				}
 			}
 			break;
 		default:
