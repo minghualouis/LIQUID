@@ -1,7 +1,9 @@
 package prymm.gui;
 /**Testing**/
-import java.io.File;
+import java.io.*;
 import java.sql.Driver;
+
+import javax.swing.JFileChooser;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -411,7 +413,7 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
 		 */
-		getLogButton.setEnabled(true);
+		getLogButton.setEnabled(false);
 		getLogButton.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
@@ -420,14 +422,41 @@ public class WelcomePage extends FluidDefaultPage{
 				
 				if (getLogButton.isEnabled()) 
 				{
-					FileDialog logFileDialog = new FileDialog(shlFluidDynamicSimulation, SWT.SAVE);
-					logFileDialog.setFilterNames(new String[]{"Log Files", "All Files (*.*)"});
-					logFileDialog.setFilterExtensions(new String[] {"*.log", "*.*"});
-//					logFileDialog.setFilterPath("c:\\");
-					logFileDialog.setFileName("FluidLog.log");
-					String fullName = logFileDialog.open();
+					final JFileChooser SaveAs = new JFileChooser();
+				      SaveAs.setApproveButtonText("Save");
+				      int actionDialog = SaveAs.showOpenDialog(null);
+				      if (actionDialog != JFileChooser.APPROVE_OPTION) {
+				         return;
+				      }
 					
-					// Output the log accoring to fullName
+					if(SaveAs.getSelectedFile() != null) {
+						    FileReader fr = null;
+					        FileWriter fw = null;
+					        File fileCreate = SaveAs.getSelectedFile();
+					        try {
+					        	 fileCreate.createNewFile();
+					            fr = new FileReader("D:\\log.txt");
+					            fw = new FileWriter(SaveAs.getSelectedFile());
+					            int c = fr.read();
+					            while(c!=-1) {
+					                fw.write(c);
+					                c = fr.read();
+					            }
+					        } catch(IOException e) {
+					            e.printStackTrace();
+					        } finally {
+					        	  try {
+					                  if (fr != null && fw != null) {
+					                      fr.close();
+					                      fw.close();
+					                      File f = new File("D:\\log.txt");
+								          f.delete();
+					                  }
+					              } catch(IOException e) {
+					                  //...
+					              }	        	 
+					        }
+					}
 					
 				}
 			}
@@ -444,6 +473,7 @@ public class WelcomePage extends FluidDefaultPage{
 				if(stopButton.isEnabled() )
 				{
 					UsrDataProcessor.stopExecution();
+					getLogButton.setEnabled(true);
 					if (runButton.isEnabled()) 
 					{
 						runButton.setEnabled(false);

@@ -5,8 +5,7 @@ import prymm.model.Flow;
 import prymm.model.Fluid;
 import prymm.model.FluidFactory;
 import prymm.model.RenderingMachine;
-
-
+import java.io.*;
 /**
  * Getting all the input data from user interface and initialize the fluid
  * @author Minghua
@@ -53,6 +52,7 @@ public class UsrDataProcessor
 		{
 			// update user configuration data first
 			updateFluid();
+			
 			if (initialFlow != null) // can be later updated as general verification
 			{ 
 				StateController.setCurrentState(StateController.RUNNING);
@@ -135,7 +135,34 @@ public class UsrDataProcessor
 		int yDim = usrData.getWidth(); // second parameter of flow
 		double temperature = Double.valueOf(usrData.getTemperature());
 		String fluidType = usrData.getFluidType();
+        
+		File fileName = new File("D:\\log.txt");	 
+	    PrintWriter outFile = null;
+	    try {
+	    	 if (!fileName.exists()) {
+	    		 fileName.createNewFile();
+	    		}
+	        outFile = new PrintWriter( new BufferedWriter(new FileWriter(fileName,true)));
+	        outFile.println("****************************************************************");
+	        outFile.println("x-Dimension : " + xDim);
+	        outFile.println("y-Dimension : " + yDim);
+	        outFile.println("Temperature : " + temperature);
+	        outFile.println("Fluid type : " + fluidType);
+	        outFile.println("****************************************************************");
+	        outFile.println();
+	        outFile.flush();
+	     } catch (IOException ex) {
+	        ex.printStackTrace();
+	      } finally {
+	        if (outFile != null) {
+	           try {
+	              outFile.close();
+	           } catch (Exception e) {
 
+	           }
+	        }
+	      }
+		
 		fluidObj = FluidFactory.getFluid(fluidType, temperature);
 		initialFlow.updateFlow(xDim, yDim, fluidObj);
 	}

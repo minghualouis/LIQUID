@@ -208,6 +208,7 @@ public class RenderingMachine implements Runnable{
 				}
 			}
 		}
+		LogWriter.writeLog(alldrops);
 	}
 
 	
