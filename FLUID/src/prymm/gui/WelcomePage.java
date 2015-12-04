@@ -260,7 +260,6 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		
 
-
 		
 		Group grpControlPanel = new Group(userControlComp, SWT.NONE);
 		RowLayout rl_grpControlPanel = new RowLayout(SWT.HORIZONTAL);
@@ -314,6 +313,10 @@ public class WelcomePage extends FluidDefaultPage{
 						replayBox.setMessage("Replay file path is " + resultFile + "\nReplay mode is selected. Configuration of fluid is not allowed");
 						replayBox.open();
 						grpFluidSettings.setEnabled(false);
+						//R:Set replay file path
+						UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+						usrData.setReplayPath(resultFile);
+						UsrDataProcessor.replay();
 					}
 				}
 			}
@@ -386,8 +389,17 @@ public class WelcomePage extends FluidDefaultPage{
 					{
 						File replayFile = new File(replayFileName);
 						if (replayFile.exists()) 
-						{
-//							use log file for replay
+						{   //R:Initate running while pressing run with selected log file
+							try 
+							{
+								UsrDataProcessor.processUsrData();
+							} 
+							catch (Exception e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							//use log file for replay
 						}
 					}
 				}
