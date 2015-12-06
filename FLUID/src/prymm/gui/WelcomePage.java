@@ -87,7 +87,7 @@ public class WelcomePage extends FluidDefaultPage{
 		 */
 		usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 		// barrier setting
-		usrcDataConfig.setBarrierShape("Rectangular");
+		usrcDataConfig.setBarrierShape("Circular");
 		// container size setting
 		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
