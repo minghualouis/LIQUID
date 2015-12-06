@@ -89,7 +89,7 @@ public class WelcomePage extends FluidDefaultPage{
 		// barrier setting
 		usrcDataConfig.setBarrierShape("Rectangular");
 		// container size setting
-		usrcDataConfig.setContainerSize("659 x 290");
+		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
 		usrcDataConfig.setEntryAdded(false);
 		// pipe exit selected?
@@ -240,7 +240,7 @@ public class WelcomePage extends FluidDefaultPage{
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
 
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		containerSize.setItems(new String[] {"659 x 290","200 x 80", "300 x 120", "600 x 240"});
+		containerSize.setItems(new String[] {"325 x 80","200 x 80", "300 x 120"});
 		containerSize.setBounds(0, 0, 91, 23);
 		containerSize.setText("Select Container Size");
 		new Label(grpFluidSettings, SWT.NONE);
