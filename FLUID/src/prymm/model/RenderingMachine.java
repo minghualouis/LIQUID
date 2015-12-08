@@ -425,7 +425,7 @@ public class RenderingMachine implements Runnable{
 			    float hue = 0; // range is 0-360
 			    int pixel;
 				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
-				System.out.println("Height of canvas  : " + height + " Width : " + width);
+//				System.out.println("Height of canvas  : " + height + " Width : " + width);
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
 			        	//Check barrier and set black if barrier
