@@ -424,23 +424,32 @@ public class RenderingMachine implements Runnable{
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
 			    int pixel;
-				ImageData md = new ImageData(xdim, ydim, 24, paletteData);
-//				System.out.println("Height of canvas  : " + height + " Width : " + width);
+			    int xOffset = (width -(xdim*2))/2;
+				int yOffset = ((height-(ydim*2))/2);
+				ImageData md = new ImageData(width, height, 24, paletteData);
+				System.out.println("Height of canvas  : " + height + " Width : " + width);
+				
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
 			        	//Check barrier and set black if barrier
 			        	if(!alldrops[x][y].isEnable()){
 			        		pixel = paletteData.getPixel(new RGB(0f, 0f, 0f));
-			        	}
+			        		
+}
 			        	else{//Else do the colour based on density
 			        		//hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
 				        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        		//pixel = (int) (0xffb200 * ((alldrops[x][y].getDensity())+1));
 			        		pixel = (int) (0xffb200 * (curl[x][y]+1));
+			        		//md.setPixel(x, y, pixel);
 			        		
 			        	}
+			        	md.setPixel(x*2+xOffset, y*2+yOffset, pixel);
+		        		md.setPixel(((x*2)+1+xOffset), y*2+yOffset, pixel);
+		        		md.setPixel(x*2+xOffset, (y*2)+1+yOffset, pixel);
+		        		md.setPixel(((x*2)+1+xOffset), ((y*2)+1+yOffset), pixel);
 			        	
-			        	md.setPixel(x, y, pixel);
+			        	//md.setPixel(x, y, pixel);
 			        }
 			        //hue += 360f / md.width;
 			        //hue += 0.03 * Math.sin(6*Math.PI*hue);

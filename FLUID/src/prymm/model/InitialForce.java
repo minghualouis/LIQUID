@@ -27,11 +27,11 @@ public class InitialForce {
 				allDrops2[0][i].setxVel(speed);
 				
 			}
-			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
-			{
-				allDrops2[i][1].disableDrop();
-				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
-			}
+//			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
+//			{
+//				allDrops2[i][1].disableDrop();
+//				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
+//			}
 			break;
 			
 		case Flow.RIGHT:
@@ -40,12 +40,12 @@ public class InitialForce {
 			{
 				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 1][i].setxVel(-speed);
 			}
-			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
-			{
-				allDrops2[i][1].disableDrop();
-				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
-			}
-			break;
+//			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getLength()-2; i++) 
+//			{
+//				allDrops2[i][1].disableDrop();
+//				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 2].disableDrop();
+//			}
+//			break;
 
 		case Flow.TOP:
 			
@@ -53,23 +53,23 @@ public class InitialForce {
 			{
 				allDrops2[i][UsrDataConfig.getUsrDataConfig().getWidth() - 1].setyVel(speed);
 			}
-			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
-			{
-				allDrops2[1][i].disableDrop();
-				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
-			}
-			break;
+//			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
+//			{
+//				allDrops2[1][i].disableDrop();
+//				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
+//			}
+//			break;
 
 		case Flow.BOTTOM:
 			for (int i = 0; i < UsrDataConfig.getUsrDataConfig().getLength(); i++) 
 			{
 				allDrops2[i][0].setyVel(-speed);
 			}
-			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
-			{
-				allDrops2[1][i].disableDrop();
-				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
-			}
+//			for (int i = 1; i < UsrDataConfig.getUsrDataConfig().getWidth()-1; i++) 
+//			{
+//				allDrops2[1][i].disableDrop();
+//				allDrops2[UsrDataConfig.getUsrDataConfig().getLength() - 2][i].disableDrop();
+//			}
 			break;
 		default:
 			break;

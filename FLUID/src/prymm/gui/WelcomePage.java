@@ -87,9 +87,9 @@ public class WelcomePage extends FluidDefaultPage{
 		 */
 		usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 		// barrier setting
-		usrcDataConfig.setBarrierShape("Rectangular");
+		usrcDataConfig.setBarrierShape("Circular");
 		// container size setting
-		usrcDataConfig.setContainerSize("659 x 290");
+		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
 		usrcDataConfig.setEntryAdded(false);
 		// pipe exit selected?
@@ -240,7 +240,7 @@ public class WelcomePage extends FluidDefaultPage{
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
 
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		containerSize.setItems(new String[] {"659 x 290","200 x 80", "300 x 120", "600 x 240"});
+		containerSize.setItems(new String[] {"325 x 80","200 x 80", "300 x 120"});
 		containerSize.setBounds(0, 0, 91, 23);
 		containerSize.setText("Select Container Size");
 		new Label(grpFluidSettings, SWT.NONE);
@@ -259,7 +259,6 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
-
 
 		
 		Group grpControlPanel = new Group(userControlComp, SWT.NONE);
@@ -314,6 +313,10 @@ public class WelcomePage extends FluidDefaultPage{
 						replayBox.setMessage("Replay file path is " + resultFile + "\nReplay mode is selected. Configuration of fluid is not allowed");
 						replayBox.open();
 						grpFluidSettings.setEnabled(false);
+						//R:Set replay file path
+						UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+						usrData.setReplayPath(resultFile);
+						UsrDataProcessor.replay();
 					}
 				}
 			}
@@ -386,8 +389,17 @@ public class WelcomePage extends FluidDefaultPage{
 					{
 						File replayFile = new File(replayFileName);
 						if (replayFile.exists()) 
-						{
-//							use log file for replay
+						{   //R:Initate running while pressing run with selected log file
+							try 
+							{
+								UsrDataProcessor.processUsrData();
+							} 
+							catch (Exception e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							//use log file for replay
 						}
 					}
 				}
