@@ -220,7 +220,7 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		initialForceDirection = new Combo(grpFluidSettings, SWT.NONE);
 
-		initialForceDirection.setItems(new String[] {"Left", "Right", "Top", "Bottom"});
+		initialForceDirection.setItems(new String[] {"Left", "Right"});
 		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		initialForceDirection.setText("Select Initial Force");
 		
@@ -359,6 +359,7 @@ public class WelcomePage extends FluidDefaultPage{
 						grpFluidSettings.setEnabled(false);
 						try 
 						{
+							
 							UsrDataProcessor.processUsrData();
 						} 
 						catch (Exception e)
@@ -425,7 +426,7 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
 		 */
-		getLogButton.setEnabled(true);
+		
 		getLogButton.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
@@ -460,7 +461,13 @@ public class WelcomePage extends FluidDefaultPage{
 					UsrDataProcessor.stopExecution();
 					if (runButton.isEnabled()) 
 					{
-						runButton.setEnabled(false);
+						// updated by minghua
+						// letting user re-configure the simulation
+						runButton.setText("Run");
+						runButton.setEnabled(true);
+						getLogButton.setEnabled(true);
+						grpFluidSettings.setEnabled(true);
+//						canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 					}
 				}
 			}

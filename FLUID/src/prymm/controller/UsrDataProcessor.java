@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.util.HashSet;
 
 import prymm.model.Driver;
 import prymm.model.Flow;
@@ -24,6 +25,7 @@ public class UsrDataProcessor
 	private static Flow initialFlow;
 	private static Fluid fluidObj;
 	
+	private static HashSet<Thread> threadSet = new HashSet<Thread>();
 	
 	/**CONTORLLER USE, for UI use**/
 	
@@ -55,9 +57,10 @@ public class UsrDataProcessor
 	 */
 	public static void processUsrData() throws Exception
 	{
-		if(StateController.getCurrentState() == StateController.IDLE)
+		if(StateController.getCurrentState() == StateController.IDLE || StateController.getCurrentState() == StateController.TERMINAL)
 		{
 			// update user configuration data first
+			
 			updateFluid();
 			if (initialFlow != null) // can be later updated as general verification
 			{ 
@@ -105,7 +108,10 @@ public class UsrDataProcessor
 	{
 		if(StateController.getCurrentState() == StateController.RUNNING || StateController.getCurrentState() == StateController.PAUSE)
 		{
-				StateController.setCurrentState(StateController.TERMINAL);
+			StateController.setCurrentState(StateController.TERMINAL);
+			Thread simThread = threadSet.iterator().next();
+			simThread.interrupt();
+			threadSet.removeAll(threadSet);
 		}
 	}
 	
@@ -159,11 +165,12 @@ public class UsrDataProcessor
 				    while ((s = br.readLine()) != null) {
 				    	 String[] columns = s.split(" ");
 				    	 
-				        System.out.println(columns[0] + "  " + columns[1]);
-				       
+				    	if(Driver.DEBUG == true){
+				    		System.out.println(columns[0] + "  " + columns[1]);
+				    	}
 				        a[i] = columns[1];
-				       i++;
-				        }
+				        i++;
+				    }
 									
 				    usrData.setViscosity(a[0]);
 				    usrData.setLength(Integer.parseInt(a[1]));
@@ -216,6 +223,8 @@ public class UsrDataProcessor
 		
 		RenderingMachine rm = new RenderingMachine(currentFlow);
 		Thread calculationThread = new Thread(rm);
+		calculationThread.setName("renderingMachine");
+		threadSet.add(calculationThread);
 		calculationThread.start();
 	}
 

@@ -427,8 +427,10 @@ public class RenderingMachine implements Runnable{
 			    int xOffset = (width -(xdim*2))/2;
 				int yOffset = ((height-(ydim*2))/2);
 				ImageData md = new ImageData(width, height, 24, paletteData);
+				if(Driver.DEBUG == true)
+				{
 				System.out.println("Height of canvas  : " + height + " Width : " + width);
-				
+				}
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
 			        	//Check barrier and set black if barrier
@@ -470,6 +472,9 @@ public class RenderingMachine implements Runnable{
 	public void run() {
 		this.canvasInit();
 		// TODO Auto-generated method stub
+		if (StateController.getCurrentState() == StateController.RUNNING) {
+			isRunning = true;
+		}
 		while (isRunning) 
 		{
 			if (StateController.getCurrentState() == StateController.RUNNING) 
