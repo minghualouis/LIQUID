@@ -91,7 +91,7 @@ public class WelcomePage extends FluidDefaultPage{
 		// container size setting
 		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
-		usrcDataConfig.setEntryAdded(false);
+		usrcDataConfig.setEntryAdded(true);
 		// pipe exit selected?
 		usrcDataConfig.setExitAdded(false);
 		// fluid type
@@ -102,7 +102,7 @@ public class WelcomePage extends FluidDefaultPage{
 //		{
 //			usrcDataConfig.setViscosity(String.valueOf(viscosityScale.getSelection()));
 //		}
-		usrcDataConfig.setInitialForce("Left");
+		usrcDataConfig.setInitialForce("Right");
 		//speedScale.getSelection()
 		usrcDataConfig.setInitialSpeed("0.1");
 		usrcDataConfig.setTemperature("50");
