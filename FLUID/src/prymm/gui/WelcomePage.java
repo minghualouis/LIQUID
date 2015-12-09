@@ -211,7 +211,7 @@ public class WelcomePage extends FluidDefaultPage{
 		barrierShape = new Combo(grpFluidSettings, SWT.NONE);
 
 		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		barrierShape.setItems(new String[] {"Rectangular", "Circular"});
+		barrierShape.setItems(new String[] {"Rectangular", "Circular", "InnerPipe"});
 		barrierShape.setBounds(0, 0, 91, 23);
 		barrierShape.setText("Select Barrier Shape");
 		new Label(grpFluidSettings, SWT.NONE);

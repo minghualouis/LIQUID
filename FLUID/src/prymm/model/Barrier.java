@@ -64,6 +64,22 @@ public class Barrier
 				}
 			}
 		}
+		else if (shape.equals("InnerPipe")) 
+		{
+			// set velcocity of related single drops to zero
+			// disable drops of a rectangular shape
+			for(int i = xCenter - 40; i <= xCenter + 40; i ++)
+			{
+				allDrops2[i][yCenter + 30].disableDrop();
+				allDrops2[i][yCenter - 30].disableDrop();
+			}
+			for(int j = 0; j < 15; j ++)
+			{
+				allDrops2[xCenter + 40][yCenter - 30 + j].disableDrop();
+				allDrops2[xCenter + 40][yCenter + 30 - j].disableDrop();
+			}
+			
+		}
 	}
 	
 	
