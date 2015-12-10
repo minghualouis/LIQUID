@@ -182,7 +182,9 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		viscoText = new Text(grpFluidSettings, SWT.BORDER);
 		viscoText.setEnabled(false);
-		viscoText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_viscoText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_viscoText.widthHint = 24;
+		viscoText.setLayoutData(gd_viscoText);
 		
 		viscosityScale = new Scale(grpFluidSettings, SWT.NONE);
 		viscosityScale.setMaximum(40);
