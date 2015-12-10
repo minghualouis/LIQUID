@@ -254,7 +254,7 @@ public class UsrDataProcessor
 		UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
 		int xLocation = (int) (usrData.getLength() * xScale);
 		int yLocation = (int) (usrData.getWidth() * yScale);
-		initialFlow.getAllDrops()[xLocation][yLocation].disableDrop();
+		initialFlow.getAllDrops()[xLocation][yLocation].isFlowMeter = true;
 		flowMeters.add(initialFlow.getAllDrops()[xLocation][yLocation]);
 	}
 }

@@ -507,6 +507,7 @@ public class RenderingMachine implements Runnable{
 				        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        		//pixel = (int) (0xffb200 * ((alldrops[x][y].getDensity())+1));
 			        		//pixel = (int) (0xffb200 * (curl[x][y]+1));
+
 			        		colorIndex = (int) (nColors * (0.5 + (alldrops[x][y].getxVel()) * 25 * 0.2));
 			        		
 			        		if (colorIndex < 0) colorIndex = 0;
@@ -517,6 +518,10 @@ public class RenderingMachine implements Runnable{
 							if(Driver.DEBUG){
 			        		System.out.println("curl is "+curl[x][y]);}
 			        	}
+			          	if(alldrops[x][y].isFlowMeter())
+		        		{
+		        			pixel = paletteData.getPixel(new RGB(0f, 0f, 0f));
+		        		}
 			        	md.setPixel(x*2+xOffset, y*2+yOffset, pixel);
 		        		md.setPixel(((x*2)+1+xOffset), y*2+yOffset, pixel);
 		        		md.setPixel(x*2+xOffset, (y*2)+1+yOffset, pixel);
