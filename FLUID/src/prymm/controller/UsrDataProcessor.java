@@ -220,7 +220,6 @@ public class UsrDataProcessor
 	private static void startCalculation(Flow currentFlow) 
 	{
 		// change the state first to running
-		
 		RenderingMachine rm = new RenderingMachine(currentFlow);
 		Thread calculationThread = new Thread(rm);
 		calculationThread.setName("renderingMachine");

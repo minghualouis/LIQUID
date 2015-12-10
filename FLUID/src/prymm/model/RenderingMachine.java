@@ -514,7 +514,8 @@ public class RenderingMachine implements Runnable{
 							pixel = colorInt[colorIndex];
 							//pixel = (int) (( *(int)(alldrops[x][y].getxVel()+1)));
 			        		//md.setPixel(x, y, pixel);
-			        		System.out.println("curl is "+curl[x][y]);
+							if(Driver.DEBUG){
+			        		System.out.println("curl is "+curl[x][y]);}
 			        	}
 			        	md.setPixel(x*2+xOffset, y*2+yOffset, pixel);
 		        		md.setPixel(((x*2)+1+xOffset), y*2+yOffset, pixel);
@@ -542,6 +543,7 @@ public class RenderingMachine implements Runnable{
 	
 	public void run() {
 		this.canvasInit();
+		isRunning = true;
 		// TODO Auto-generated method stub
 		while (isRunning) 
 		{
