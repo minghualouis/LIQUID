@@ -6,12 +6,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 import prymm.model.Driver;
 import prymm.model.Flow;
 import prymm.model.Fluid;
 import prymm.model.FluidFactory;
 import prymm.model.RenderingMachine;
+import prymm.model.SingleDrop;
 
 
 /**
@@ -26,6 +28,8 @@ public class UsrDataProcessor
 	private static Fluid fluidObj;
 	
 	private static HashSet<Thread> threadSet = new HashSet<Thread>();
+	
+	private static LinkedList<SingleDrop> flowMeters = new LinkedList<SingleDrop>();
 	
 	/**CONTORLLER USE, for UI use**/
 	
@@ -242,5 +246,15 @@ public class UsrDataProcessor
 		Flow flow = new Flow(xDim, yDim, fluidObj);
 
 		return flow;
+	}
+
+	public static void addFlowMeter(double xScale, double yScale) {
+		// TODO Auto-generated method stub
+		
+		UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+		int xLocation = (int) (usrData.getLength() * xScale);
+		int yLocation = (int) (usrData.getWidth() * yScale);
+		initialFlow.getAllDrops()[xLocation][yLocation].disableDrop();
+		flowMeters.add(initialFlow.getAllDrops()[xLocation][yLocation]);
 	}
 }

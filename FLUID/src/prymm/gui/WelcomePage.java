@@ -1,5 +1,6 @@
 package prymm.gui;
 /**Testing**/
+import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.sql.Driver;
 
@@ -24,6 +25,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -646,5 +649,20 @@ public class WelcomePage extends FluidDefaultPage{
 		});
 		
 		
+		fluidDisplayComp.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+//				System.out.println(arg0.x);
+//				System.out.println(arg0.y);
+				double x = arg0.x;
+				double y = arg0.y;
+				double xScale = x / fluidDisplayComp.getBounds().width;
+				double yScale = y / fluidDisplayComp.getBounds().height;
+				UsrDataProcessor.addFlowMeter(xScale, yScale);
+			}
+			
+		});
 	}
 }
