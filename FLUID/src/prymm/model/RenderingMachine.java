@@ -1,8 +1,13 @@
 package prymm.model;
+//import java.awt.*;
+//import java.awt.event.*;
+//import java.awt.image.MemoryImageSource;
+//import java.text.DecimalFormat;
+import java.awt.Color;
 
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
+//import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
@@ -94,20 +99,33 @@ public class RenderingMachine implements Runnable{
 				alldrops[x][y].setDensity(density);
 				alldrops[x][y].setxVel(xVel);
 				alldrops[x][y].setyVel(yVel);
+				if("Right".equals(initForce)){
 				alldrops[x][y].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
-				alldrops[x][y].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
-				alldrops[x][y].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][1].setVal(one9th * (1 - 3*v + 3*v*v));
 				alldrops[x][y].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
 				alldrops[x][y].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
-				alldrops[x][y].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
-				alldrops[x][y].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
-				alldrops[x][y].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
-				alldrops[x][y].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
-				
+				alldrops[x][y].getDots()[0][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][0].setVal(one36th * (1 - 3*v + 3*v*v));
+				}
+				else{
+				alldrops[x][y].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[0][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][y].getDots()[0][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[0][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][y].getDots()[2][0].setVal(one36th * (1 - 3*v + 3*v*v));		
+				}
 			}
 		}
-		
 	}
+		
+	
 	/**
 	 * calculate all the drops in canvas
 	 */
@@ -213,6 +231,7 @@ public class RenderingMachine implements Runnable{
 		int xdim = UsrDataConfig.getUsrDataConfig().getLength();
 		int ydim = UsrDataConfig.getUsrDataConfig().getWidth();
 		SingleDrop[][] alldrops = currentFlow.getAllDrops();
+		String initForce = UsrDataConfig.getUsrDataConfig().getInitialForce();
 		for (int x=0; x<xdim-1; x++) {// first start in NW corner...
 			for (int y=ydim-1; y>0; y--) 
 			{
@@ -251,41 +270,80 @@ public class RenderingMachine implements Runnable{
 		// user-determined speed:
 		//double v = speedScroller.getValue();
 		double v = Double.parseDouble(UsrDataConfig.getUsrDataConfig().getInitialSpeed().trim());
+		if("Right".equals(initForce)){
 		for (int y=0; y<ydim; y++) {
 			if (alldrops[0][y].isEnable()) {
-				alldrops[0][y].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
-				alldrops[0][y].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
-				alldrops[0][y].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[0][y].getDots()[0][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[0][y].getDots()[0][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[0][y].getDots()[0][0].setVal(one36th * (1 + 3*v + 3*v*v));
 			}
 		}
 		// Try the same thing at the right edge and see if it works:
 		for (int y=0; y<ydim; y++) {
 			if (alldrops[0][y].isEnable()) {
-				alldrops[xdim-1][y].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
-				alldrops[xdim-1][y].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
-				alldrops[xdim-1][y].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[xdim-1][y].getDots()[2][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[xdim-1][y].getDots()[2][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[xdim-1][y].getDots()[2][0].setVal(one36th * (1 - 3*v + 3*v*v));
 			}
 		}
 		// Now handle top and bottom edges:
 		for (int x=0; x<xdim; x++) {
 			alldrops[x][0].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
-			alldrops[x][0].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
-			alldrops[x][0].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+			alldrops[x][0].getDots()[0][1].setVal(one9th * (1 + 3*v + 3*v*v));
+			alldrops[x][0].getDots()[2][1].setVal(one9th * (1 - 3*v + 3*v*v));
 			alldrops[x][0].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
 			alldrops[x][0].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
-			alldrops[x][0].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
-			alldrops[x][0].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
-			alldrops[x][0].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
-			alldrops[x][0].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+			alldrops[x][0].getDots()[0][2].setVal(one36th * (1 + 3*v + 3*v*v));
+			alldrops[x][0].getDots()[0][0].setVal(one36th * (1 + 3*v + 3*v*v));
+			alldrops[x][0].getDots()[2][2].setVal(one36th * (1 - 3*v + 3*v*v));
+			alldrops[x][0].getDots()[2][0].setVal(one36th * (1 - 3*v + 3*v*v));
 			alldrops[x][ydim-1].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
-			alldrops[x][ydim-1].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
-			alldrops[x][ydim-1].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[0][1].setVal(one9th * (1 + 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[2][1].setVal(one9th * (1 - 3*v + 3*v*v));
 			alldrops[x][ydim-1].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
 			alldrops[x][ydim-1].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
-			alldrops[x][ydim-1].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
-			alldrops[x][ydim-1].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
-			alldrops[x][ydim-1].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
-			alldrops[x][ydim-1].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[0][2].setVal(one36th * (1 + 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[0][0].setVal(one36th * (1 + 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[2][2].setVal(one36th * (1 - 3*v + 3*v*v));
+			alldrops[x][ydim-1].getDots()[2][0].setVal(one36th * (1 - 3*v + 3*v*v));
+		}
+		}else{
+			for (int y=0; y<ydim; y++) {
+				if (alldrops[0][y].isEnable()) {
+					alldrops[0][y].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
+					alldrops[0][y].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
+					alldrops[0][y].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				}
+			}
+			// Try the same thing at the right edge and see if it works:
+			for (int y=0; y<ydim; y++) {
+				if (alldrops[0][y].isEnable()) {
+					alldrops[xdim-1][y].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+					alldrops[xdim-1][y].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
+					alldrops[xdim-1][y].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+				}
+			}
+			// Now handle top and bottom edges:
+			for (int x=0; x<xdim; x++) {
+				alldrops[x][0].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
+				alldrops[x][0].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[x][0].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[x][0].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][0].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][0].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][0].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][0].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][0].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[1][1].setVal(four9ths * (1 - 1.5*v*v));
+				alldrops[x][ydim-1].getDots()[2][1].setVal(one9th * (1 + 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[0][1].setVal(one9th * (1 - 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[1][2].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][ydim-1].getDots()[1][0].setVal(one9th * (1 - 1.5*v*v));
+				alldrops[x][ydim-1].getDots()[2][2].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[2][0].setVal(one36th * (1 + 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[0][2].setVal(one36th * (1 - 3*v + 3*v*v));
+				alldrops[x][ydim-1].getDots()[0][0].setVal(one36th * (1 - 3*v + 3*v*v));	
+		}	
 		}
 	}
 	
@@ -419,14 +477,24 @@ public class RenderingMachine implements Runnable{
 				}
 				PaletteData paletteData = new PaletteData(0xff, 0xff00, 0xff0000);
 			    float hue = 0; // range is 0-360
+			    int nColors = 600;
+		    	//Color[] shade = new Color[nColors];
+		    	int[] colorInt = new int[nColors];		// colors stored as integers for MemoryImageSource
+		    	int blackColorInt = Color.HSBtoRGB((float)0,(float)1,(float)0);		// an integer to represent the color black
+		    	{	for (int c=0; c<nColors; c++) {
+		    			double h = (2.0/3) * (1 - c*1.0/nColors);	// hue from blue->cyan->green->yellow->red
+		    			h += 0.03 * Math.sin(6*Math.PI*h);					// for smoother color gradations
+		    			//shade[c] = Color.getHSBColor((float)h,(float)1,(float)1);
+		    			colorInt[c] = Color.HSBtoRGB((float)h,(float)1,(float)1);	// store each color as an integer
+		    		}
+		    	}
 			    int pixel;
 			    int xOffset = (width -(xdim*2))/2;
 				int yOffset = ((height-(ydim*2))/2);
 				ImageData md = new ImageData(width, height, 24, paletteData);
-				if(Driver.DEBUG == true)
-				{
-				System.out.println("Height of canvas  : " + height + " Width : " + width);
-				}
+				//System.out.println("Height of canvas  : " + height + " Width : " + width);
+				int colorIndex;
+				int theColor;
 				for(int x = 0; x < xdim; x++){
 			        for(int y = 0; y < ydim; y++){
 			        	//Check barrier and set black if barrier
@@ -438,9 +506,15 @@ public class RenderingMachine implements Runnable{
 			        		//hue = (float) ( (220 * ((alldrops[x][y].getDensity()))+0.5));//To plot density
 				        	//hue = 200 + (float)alldrops[x][y].getxVel();//To plot x-velocity if needed
 			        		//pixel = (int) (0xffb200 * ((alldrops[x][y].getDensity())+1));
-			        		pixel = (int) (0xffb200 * (curl[x][y]+1));
-			        		//md.setPixel(x, y, pixel);
+			        		//pixel = (int) (0xffb200 * (curl[x][y]+1));
+			        		colorIndex = (int) (nColors * (0.5 + (alldrops[x][y].getxVel()) * 25 * 0.2));
 			        		
+			        		if (colorIndex < 0) colorIndex = 0;
+							if (colorIndex >= nColors) colorIndex = nColors - 1;
+							pixel = colorInt[colorIndex];
+							//pixel = (int) (( *(int)(alldrops[x][y].getxVel()+1)));
+			        		//md.setPixel(x, y, pixel);
+			        		System.out.println("curl is "+curl[x][y]);
 			        	}
 			        	md.setPixel(x*2+xOffset, y*2+yOffset, pixel);
 		        		md.setPixel(((x*2)+1+xOffset), y*2+yOffset, pixel);
@@ -451,6 +525,7 @@ public class RenderingMachine implements Runnable{
 			        }
 			        //hue += 360f / md.width;
 			        //hue += 0.03 * Math.sin(6*Math.PI*hue);
+			        
 			    }
 	        	try {
 					Thread.sleep(1);
@@ -468,9 +543,6 @@ public class RenderingMachine implements Runnable{
 	public void run() {
 		this.canvasInit();
 		// TODO Auto-generated method stub
-		if (StateController.getCurrentState() == StateController.RUNNING) {
-			isRunning = true;
-		}
 		while (isRunning) 
 		{
 			if (StateController.getCurrentState() == StateController.RUNNING) 
