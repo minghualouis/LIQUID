@@ -17,7 +17,7 @@ import prymm.gui.FluidDefaultPage;
 
 /**
  * Class rendering machine is used for calculation of all the single drops of flow in the application
- * @author Minghua
+ * @author Yashraj
  *
  */
 public class RenderingMachine implements Runnable{
@@ -41,10 +41,6 @@ public class RenderingMachine implements Runnable{
 		
 	}
 
-//	public RenderingMachine getCurrentRenderingMachine()
-//	{
-//		
-//	}
 	
 	private void canvasInit() {
 		
