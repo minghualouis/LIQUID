@@ -30,6 +30,8 @@ public class SingleDrop
 	 */
 	private SingleDot[][] dots = new SingleDot[3][3];
 	
+	public boolean isFlowMeter = false;
+	
 	public SingleDrop()
 	{
 		this.isEnable = true;
@@ -94,6 +96,11 @@ public class SingleDrop
 
 	public void setDots(SingleDot[][] dots) {
 		this.dots = dots;
+	}
+
+	public boolean isFlowMeter() {
+		// TODO Auto-generated method stub
+		return isFlowMeter;
 	}
 	
 	

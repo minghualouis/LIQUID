@@ -22,7 +22,7 @@ public class UsrDataConfig
 	private int length;
 	private int width;
 	
-	
+	private String replayPath;
 	
 	/**
 	 * Singleton pattern used here, to retrieve only a UsrDataConfig
@@ -127,6 +127,14 @@ public class UsrDataConfig
 
 	public void setWidth(int width) {
 		this.width = width;
+	}
+
+	public String getReplayPath() {
+		return replayPath;
+	}
+
+	public void setReplayPath(String replayPath) {
+		this.replayPath = replayPath;
 	}
 	
 	

@@ -1,11 +1,22 @@
 package prymm.controller;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 import prymm.model.Driver;
 import prymm.model.Flow;
 import prymm.model.Fluid;
 import prymm.model.FluidFactory;
 import prymm.model.RenderingMachine;
 import java.io.*;
+import prymm.model.SingleDrop;
+
+
 /**
  * Getting all the input data from user interface and initialize the fluid
  * @author Minghua
@@ -17,6 +28,9 @@ public class UsrDataProcessor
 	private static Flow initialFlow;
 	private static Fluid fluidObj;
 	
+	private static HashSet<Thread> threadSet = new HashSet<Thread>();
+	
+	private static LinkedList<SingleDrop> flowMeters = new LinkedList<SingleDrop>();
 	
 	/**CONTORLLER USE, for UI use**/
 	
@@ -48,9 +62,10 @@ public class UsrDataProcessor
 	 */
 	public static void processUsrData() throws Exception
 	{
-		if(StateController.getCurrentState() == StateController.IDLE)
+		if(StateController.getCurrentState() == StateController.IDLE || StateController.getCurrentState() == StateController.TERMINAL)
 		{
 			// update user configuration data first
+			
 			updateFluid();
 			
 			if (initialFlow != null) // can be later updated as general verification
@@ -99,7 +114,10 @@ public class UsrDataProcessor
 	{
 		if(StateController.getCurrentState() == StateController.RUNNING || StateController.getCurrentState() == StateController.PAUSE)
 		{
-				StateController.setCurrentState(StateController.TERMINAL);
+			StateController.setCurrentState(StateController.TERMINAL);
+			Thread simThread = threadSet.iterator().next();
+			simThread.interrupt();
+			threadSet.removeAll(threadSet);
 		}
 	}
 	
@@ -116,14 +134,79 @@ public class UsrDataProcessor
 		}
 	}
 	
-	
-	
+	/**
+	 * For replay use
+	 */
+	public static void replay()
+	{
+		//Radhika:Changed state check to idle from initial
+		if(StateController.getCurrentState() == StateController.IDLE)
+		{
+			UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+			retriveForReplay(usrData);
+			StateController.setCurrentState(StateController.IDLE);
+		}		
+	}
 	
 	
 	
 	/**INTERNAL USE**/
 	
 	
+	private static void retriveForReplay(UsrDataConfig usrData) {
+		//R: : Added for parsing log file & set configuration 
+				InputStream ins = null; // raw byte-stream
+				Reader r = null; 
+
+				BufferedReader br = null; // buffered for readLine()
+				try {
+				    String s;
+				    String a[]=new String[10];
+				    int i = 0 ;
+					//ins = new FileInputStream("C:\\Users\\parth\\Desktop\\radhika.txt");
+				    ins = new FileInputStream(usrData.getReplayPath()); 
+				    r = new InputStreamReader(ins, "UTF-8"); // leave charset out for default
+				    br = new BufferedReader(r);
+				    
+				    while ((s = br.readLine()) != null) {
+				    	 String[] columns = s.split(" ");
+				    	 
+				    	if(Driver.DEBUG == true){
+				    		System.out.println(columns[0] + "  " + columns[1]);
+				    	}
+				        a[i] = columns[1];
+				        i++;
+				    }
+									
+				    usrData.setViscosity(a[0]);
+				    usrData.setLength(Integer.parseInt(a[1]));
+				    usrData.setWidth(Integer.parseInt(a[2]));
+				    usrData.setBarrierShape(a[3]);
+				    //usrData.setContainerSize(a[4]);
+				    //usrData.setFluidType(a[5]);
+				    usrData.setInitialForce(a[6]);
+				    usrData.setInitialSpeed(a[7]);
+				    usrData.setTemperature(a[8]);
+
+				    //System.out.println("Viscosity after set is "+usrData.getViscosity());
+				   // System.out.println("Length after set is "+UsrDataConfig.getUsrDataConfig().getLength());
+				    //System.out.println("Width after set is "+UsrDataConfig.getUsrDataConfig().getWidth());
+					
+					   
+					   
+				}
+				catch (Exception e)
+				{
+				    System.err.println(e.getMessage()); // handle exception
+				}
+				finally {
+				    if (br != null) { try { br.close(); } catch(Throwable t) { /* ensure close happens */ } }
+				    if (r != null) { try { r.close(); } catch(Throwable t) { /* ensure close happens */ } }
+				    if (ins != null) { try { ins.close(); } catch(Throwable t) { /* ensure close happens */ } }
+				}
+				
+	}
+
 	/**
 	 *  Used when state is idle
 	 *  When user 
@@ -170,9 +253,10 @@ public class UsrDataProcessor
 	private static void startCalculation(Flow currentFlow) 
 	{
 		// change the state first to running
-		
 		RenderingMachine rm = new RenderingMachine(currentFlow);
 		Thread calculationThread = new Thread(rm);
+		calculationThread.setName("renderingMachine");
+		threadSet.add(calculationThread);
 		calculationThread.start();
 	}
 
@@ -191,5 +275,15 @@ public class UsrDataProcessor
 		Flow flow = new Flow(xDim, yDim, fluidObj);
 
 		return flow;
+	}
+
+	public static void addFlowMeter(double xScale, double yScale) {
+		// TODO Auto-generated method stub
+		
+		UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+		int xLocation = (int) (usrData.getLength() * xScale);
+		int yLocation = (int) (usrData.getWidth() * yScale);
+		initialFlow.getAllDrops()[xLocation][yLocation].isFlowMeter = true;
+		flowMeters.add(initialFlow.getAllDrops()[xLocation][yLocation]);
 	}
 }

@@ -1,6 +1,8 @@
 package prymm.gui;
 /**Testing**/
 import java.io.*;
+import java.awt.event.MouseAdapter;
+import java.io.File;
 import java.sql.Driver;
 
 import javax.swing.JFileChooser;
@@ -26,6 +28,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -89,11 +93,11 @@ public class WelcomePage extends FluidDefaultPage{
 		 */
 		usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 		// barrier setting
-		usrcDataConfig.setBarrierShape("Rectangular");
+		usrcDataConfig.setBarrierShape("Circular");
 		// container size setting
-		usrcDataConfig.setContainerSize("659 x 290");
+		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
-		usrcDataConfig.setEntryAdded(false);
+		usrcDataConfig.setEntryAdded(true);
 		// pipe exit selected?
 		usrcDataConfig.setExitAdded(false);
 		// fluid type
@@ -104,7 +108,7 @@ public class WelcomePage extends FluidDefaultPage{
 //		{
 //			usrcDataConfig.setViscosity(String.valueOf(viscosityScale.getSelection()));
 //		}
-		usrcDataConfig.setInitialForce("Left");
+		usrcDataConfig.setInitialForce("Right");
 		//speedScale.getSelection()
 		usrcDataConfig.setInitialSpeed("0.1");
 		usrcDataConfig.setTemperature("50");
@@ -184,7 +188,9 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		viscoText = new Text(grpFluidSettings, SWT.BORDER);
 		viscoText.setEnabled(false);
-		viscoText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_viscoText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_viscoText.widthHint = 24;
+		viscoText.setLayoutData(gd_viscoText);
 		
 		viscosityScale = new Scale(grpFluidSettings, SWT.NONE);
 		viscosityScale.setMaximum(40);
@@ -213,7 +219,7 @@ public class WelcomePage extends FluidDefaultPage{
 		barrierShape = new Combo(grpFluidSettings, SWT.NONE);
 
 		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		barrierShape.setItems(new String[] {"Rectangular", "Circular"});
+		barrierShape.setItems(new String[] {"Rectangular", "Circular", "InnerPipe"});
 		barrierShape.setBounds(0, 0, 91, 23);
 		barrierShape.setText("Select Barrier Shape");
 		new Label(grpFluidSettings, SWT.NONE);
@@ -222,7 +228,7 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		initialForceDirection = new Combo(grpFluidSettings, SWT.NONE);
 
-		initialForceDirection.setItems(new String[] {"Left", "Right", "Top", "Bottom"});
+		initialForceDirection.setItems(new String[] {"Left", "Right"});
 		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		initialForceDirection.setText("Select Initial Force");
 		
@@ -242,7 +248,7 @@ public class WelcomePage extends FluidDefaultPage{
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
 
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		containerSize.setItems(new String[] {"659 x 290","200 x 80", "300 x 120", "600 x 240"});
+		containerSize.setItems(new String[] {"325 x 80","200 x 80", "300 x 120"});
 		containerSize.setBounds(0, 0, 91, 23);
 		containerSize.setText("Select Container Size");
 		new Label(grpFluidSettings, SWT.NONE);
@@ -261,7 +267,6 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
-
 
 		
 		Group grpControlPanel = new Group(userControlComp, SWT.NONE);
@@ -316,6 +321,10 @@ public class WelcomePage extends FluidDefaultPage{
 						replayBox.setMessage("Replay file path is " + resultFile + "\nReplay mode is selected. Configuration of fluid is not allowed");
 						replayBox.open();
 						grpFluidSettings.setEnabled(false);
+						//R:Set replay file path
+						UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+						usrData.setReplayPath(resultFile);
+						UsrDataProcessor.replay();
 					}
 				}
 			}
@@ -354,8 +363,11 @@ public class WelcomePage extends FluidDefaultPage{
 						{
 							resetButton.setEnabled(false);
 						}
+						// not allowing user to configure during execution
+						grpFluidSettings.setEnabled(false);
 						try 
 						{
+							
 							UsrDataProcessor.processUsrData();
 						} 
 						catch (Exception e)
@@ -386,8 +398,17 @@ public class WelcomePage extends FluidDefaultPage{
 					{
 						File replayFile = new File(replayFileName);
 						if (replayFile.exists()) 
-						{
-//							use log file for replay
+						{   //R:Initate running while pressing run with selected log file
+							try 
+							{
+								UsrDataProcessor.processUsrData();
+							} 
+							catch (Exception e)
+							{
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							//use log file for replay
 						}
 					}
 				}
@@ -476,7 +497,13 @@ public class WelcomePage extends FluidDefaultPage{
 					getLogButton.setEnabled(true);
 					if (runButton.isEnabled()) 
 					{
-						runButton.setEnabled(false);
+						// updated by minghua
+						// letting user re-configure the simulation
+						runButton.setText("Run");
+						runButton.setEnabled(true);
+						getLogButton.setEnabled(true);
+						grpFluidSettings.setEnabled(true);
+//						canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 					}
 				}
 			}
@@ -650,6 +677,23 @@ public class WelcomePage extends FluidDefaultPage{
 					usrcDataConfig.setExitAdded(false);
 				}
 			}
+		});
+		
+		
+		fluidDisplayComp.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+//				System.out.println(arg0.x);
+//				System.out.println(arg0.y);
+				double x = arg0.x;
+				double y = arg0.y;
+				double xScale = x / fluidDisplayComp.getBounds().width;
+				double yScale = y / fluidDisplayComp.getBounds().height;
+				UsrDataProcessor.addFlowMeter(xScale, yScale);
+			}
+			
 		});
 	}
 }
