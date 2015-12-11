@@ -1,10 +1,5 @@
 package prymm.controller;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -12,6 +7,7 @@ import prymm.model.Driver;
 import prymm.model.Flow;
 import prymm.model.Fluid;
 import prymm.model.FluidFactory;
+import prymm.model.LogWriter;
 import prymm.model.RenderingMachine;
 import java.io.*;
 import prymm.model.SingleDrop;
@@ -218,8 +214,40 @@ public class UsrDataProcessor
 		int yDim = usrData.getWidth(); // second parameter of flow
 		double temperature = Double.valueOf(usrData.getTemperature());
 		String fluidType = usrData.getFluidType();
-        
-		File fileName = new File("D:\\log.txt");	 
+
+		
+		fluidObj = FluidFactory.getFluid(fluidType, temperature);
+		initialFlow.updateFlow(xDim, yDim, fluidObj);
+	}
+
+	private static void startCalculation(Flow currentFlow) 
+	{
+		// change the state first to running
+		RenderingMachine rm = new RenderingMachine(currentFlow);
+		Thread calculationThread = new Thread(rm);
+		calculationThread.setName("renderingMachine");
+		threadSet.add(calculationThread);
+		calculationThread.start();
+		
+
+		UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+		int xDim = usrData.getLength(); // first parameter of flow
+		int yDim = usrData.getWidth(); // second parameter of flow
+		double temperature = Double.valueOf(usrData.getTemperature());
+		String fluidType = usrData.getFluidType();
+		File fileName = new File(".\\log.txt");
+		if(fileName.exists())
+		{
+			fileName.delete();
+		}else
+		{
+			try {
+				fileName.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	    PrintWriter outFile = null;
 	    try {
 	    	 if (!fileName.exists()) {
@@ -245,19 +273,31 @@ public class UsrDataProcessor
 	           }
 	        }
 	      }
-		
-		fluidObj = FluidFactory.getFluid(fluidType, temperature);
-		initialFlow.updateFlow(xDim, yDim, fluidObj);
-	}
+		Thread writeLogThread = new Thread(new Runnable(){
 
-	private static void startCalculation(Flow currentFlow) 
-	{
-		// change the state first to running
-		RenderingMachine rm = new RenderingMachine(currentFlow);
-		Thread calculationThread = new Thread(rm);
-		calculationThread.setName("renderingMachine");
-		threadSet.add(calculationThread);
-		calculationThread.start();
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				while(StateController.getCurrentState() == StateController.RUNNING)
+				{
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					LogWriter.writeLog(currentFlow);
+				}
+				
+			}
+			
+		});
+		writeLogThread.start();
 	}
 
 	private static Flow initializeFlow(UsrDataConfig dataConfig)
