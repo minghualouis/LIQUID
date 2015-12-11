@@ -73,10 +73,10 @@ public class Barrier
 				allDrops2[i][yCenter + 30].disableDrop();
 				allDrops2[i][yCenter - 30].disableDrop();
 			}
-			for(int j = 0; j < 15; j ++)
+			for(int j = 0; j < 25; j ++)
 			{
-				allDrops2[xCenter + 40][yCenter - 30 + j].disableDrop();
-				allDrops2[xCenter + 40][yCenter + 30 - j].disableDrop();
+				allDrops2[xCenter - 40][yCenter - 30 + j].disableDrop();
+				allDrops2[xCenter - 40][yCenter + 30 - j].disableDrop();
 			}
 			
 		}

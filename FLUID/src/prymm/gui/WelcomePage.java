@@ -3,6 +3,7 @@ package prymm.gui;
 import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.sql.Driver;
+import java.text.DecimalFormat;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -234,13 +235,15 @@ public class WelcomePage extends FluidDefaultPage{
 		lblInitialSpeed.setText("Initial Speed");
 		
 		speedText = new Text(grpFluidSettings, SWT.BORDER);
-		speedText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_speedText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_speedText.widthHint = 20;
+		speedText.setLayoutData(gd_speedText);
 		
 		Scale speedScale = new Scale(grpFluidSettings, SWT.NONE);
 		speedScale.setMaximum(120);
 		speedScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		speedScale.setToolTipText("fluid initial speed");
-		speedText.setText(speedScale.getSelection() + "");
+		speedText.setText(new DecimalFormat("#.##").format(speedScale.getSelection() * 1.0 / 1000 ));
 		
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
 
@@ -253,6 +256,7 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		btnAddPipeEntry = new Button(grpFluidSettings, SWT.CHECK);
+		btnAddPipeEntry.setSelection(true);
 
 		btnAddPipeEntry.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnAddPipeEntry.setText("Add Pipe Entry");
@@ -422,6 +426,17 @@ public class WelcomePage extends FluidDefaultPage{
 			{
 				grpFluidSettings.setEnabled(true);
 				fileText.setText("");
+				comboFluidType.select(0); // water
+				barrierShape.select(1); // circular
+				containerSize.select(0); // 325 * 80
+				lblViscosity.setEnabled(false); // viscosity label
+				viscosityScale.setEnabled(false); // viscosity scale
+				initialForceDirection.select(1); // initial force : right
+				tempScale.setSelection(50); // temperature
+				btnAddPipeEntry.setEnabled(true); // entry
+				btnAddPipeExit.setEnabled(false);
+				speedScale.setSelection(100);
+				
 				initalFlow();
 			}
 		});
@@ -471,6 +486,7 @@ public class WelcomePage extends FluidDefaultPage{
 						runButton.setText("Run");
 						runButton.setEnabled(true);
 						getLogButton.setEnabled(true);
+						resetButton.setEnabled(true);
 						grpFluidSettings.setEnabled(true);
 //						canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 					}
@@ -523,11 +539,12 @@ public class WelcomePage extends FluidDefaultPage{
 			public void widgetSelected(SelectionEvent arg0) 
 			{
 				//0.000-0.120 -> [0,120]
-//				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
-//				speedText.setText(String.format("%.3f", currentSelectedSpeed));
-				int currentSelectedSpeed = speedScale.getSelection();
-				speedText.setText(currentSelectedSpeed + "");
-				usrcDataConfig.setViscosity(speedScale.getSelection() + "");
+				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
+				String currentspeedText = new DecimalFormat("#.##").format(currentSelectedSpeed);
+				speedText.setText(currentspeedText);
+//				int currentSelectedSpeed = speedScale.getSelection();
+//				speedText.setText(currentSelectedSpeed + "");
+				usrcDataConfig.setInitialSpeed(currentspeedText);
 			}
 		});
 		
