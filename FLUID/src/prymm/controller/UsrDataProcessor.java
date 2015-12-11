@@ -190,6 +190,7 @@ public class UsrDataProcessor
 				    usrData.setInitialSpeed(a[7]);
 				    usrData.setTemperature(a[8]);
 
+				    
 				    //System.out.println("Viscosity after set is "+usrData.getViscosity());
 				   // System.out.println("Length after set is "+UsrDataConfig.getUsrDataConfig().getLength());
 				    //System.out.println("Width after set is "+UsrDataConfig.getUsrDataConfig().getWidth());

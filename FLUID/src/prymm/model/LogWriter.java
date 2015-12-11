@@ -55,6 +55,8 @@ public class LogWriter {
 	        while(flowMeterIterator.hasNext())
 	        {
 	        	SingleDrop currentFlowMeter = flowMeterIterator.next();
+	        	outFile.println("FlowMeter X-index : " + currentFlowMeter.getxIndex()); 
+	        	outFile.println("FlowMeter Y-index : " + currentFlowMeter.getyIndex());
 		        outFile.println("FlowMeter X-Velocity : " + currentFlowMeter.getxVel());   
 		        outFile.println("FlowMeter Y-Velocity : " + currentFlowMeter.getyVel());
 		        outFile.println("FlowMeter Density : " + currentFlowMeter.getDensity());

@@ -32,6 +32,13 @@ public class SingleDrop
 	
 	public boolean isFlowMeter = false;
 	
+	public void setFlowMeter(boolean isFlowMeter) {
+		this.isFlowMeter = isFlowMeter;
+	}
+
+	private int xIndex;
+	private int yIndex;
+	
 	public SingleDrop()
 	{
 		this.isEnable = true;
@@ -44,6 +51,22 @@ public class SingleDrop
 		}
 	}
 	
+	public int getxIndex() {
+		return xIndex;
+	}
+
+	public void setxIndex(int xIndex) {
+		this.xIndex = xIndex;
+	}
+
+	public int getyIndex() {
+		return yIndex;
+	}
+
+	public void setyIndex(int yIndex) {
+		this.yIndex = yIndex;
+	}
+
 	/**
 	 * disable the drop, used for setting barrier
 	 */

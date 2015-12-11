@@ -195,7 +195,10 @@ public class Flow
 			{
 				if(allDrops[i][j].isFlowMeter)
 				{
+					allDrops[i][j].setxIndex(i);
+					allDrops[i][j].setyIndex(j);
 					flowMeters.add(allDrops[i][j]);
+					
 				}
 			}
 		}
