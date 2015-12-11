@@ -1,10 +1,5 @@
 package prymm.controller;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.HashSet;
 import java.util.LinkedList;
 
@@ -12,7 +7,9 @@ import prymm.model.Driver;
 import prymm.model.Flow;
 import prymm.model.Fluid;
 import prymm.model.FluidFactory;
+import prymm.model.LogWriter;
 import prymm.model.RenderingMachine;
+import java.io.*;
 import prymm.model.SingleDrop;
 
 
@@ -66,6 +63,7 @@ public class UsrDataProcessor
 			// update user configuration data first
 			
 			updateFluid();
+			
 			if (initialFlow != null) // can be later updated as general verification
 			{ 
 				StateController.setCurrentState(StateController.RUNNING);
@@ -217,6 +215,7 @@ public class UsrDataProcessor
 		double temperature = Double.valueOf(usrData.getTemperature());
 		String fluidType = usrData.getFluidType();
 
+		
 		fluidObj = FluidFactory.getFluid(fluidType, temperature);
 		initialFlow.updateFlow(xDim, yDim, fluidObj);
 	}
@@ -229,6 +228,76 @@ public class UsrDataProcessor
 		calculationThread.setName("renderingMachine");
 		threadSet.add(calculationThread);
 		calculationThread.start();
+		
+
+		UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+		int xDim = usrData.getLength(); // first parameter of flow
+		int yDim = usrData.getWidth(); // second parameter of flow
+		double temperature = Double.valueOf(usrData.getTemperature());
+		String fluidType = usrData.getFluidType();
+		File fileName = new File(".\\log.txt");
+		if(fileName.exists())
+		{
+			fileName.delete();
+		}else
+		{
+			try {
+				fileName.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	    PrintWriter outFile = null;
+	    try {
+	    	 if (!fileName.exists()) {
+	    		 fileName.createNewFile();
+	    		}
+	        outFile = new PrintWriter( new BufferedWriter(new FileWriter(fileName,true)));
+	        outFile.println("****************************************************************");
+	        outFile.println("x-Dimension : " + xDim);
+	        outFile.println("y-Dimension : " + yDim);
+	        outFile.println("Temperature : " + temperature);
+	        outFile.println("Fluid type : " + fluidType);
+	        outFile.println("****************************************************************");
+	        outFile.println();
+	        outFile.flush();
+	     } catch (IOException ex) {
+	        ex.printStackTrace();
+	      } finally {
+	        if (outFile != null) {
+	           try {
+	              outFile.close();
+	           } catch (Exception e) {
+
+	           }
+	        }
+	      }
+		Thread writeLogThread = new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				while(StateController.getCurrentState() == StateController.RUNNING)
+				{
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					LogWriter.writeLog(currentFlow);
+				}
+				
+			}
+			
+		});
+		writeLogThread.start();
 	}
 
 	private static Flow initializeFlow(UsrDataConfig dataConfig)
