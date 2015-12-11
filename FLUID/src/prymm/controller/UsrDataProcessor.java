@@ -189,7 +189,15 @@ public class UsrDataProcessor
 				    usrData.setInitialForce(a[6]);
 				    usrData.setInitialSpeed(a[7]);
 				    usrData.setTemperature(a[8]);
-
+				    
+				    // minghua added start
+				    // create an int value storing # of all flowmeters read from log file
+				    // create 2 int[] array1, array2, one to put the x value, another to put y value
+				    for (int j = 0; j < flowmeterNum; j++) {
+						
+				    	initialFlow.getAllDrops()[array1[j]][array2[j]].isFlowMeter = true;
+					}
+				    // minghua added end
 				    
 				    //System.out.println("Viscosity after set is "+usrData.getViscosity());
 				   // System.out.println("Length after set is "+UsrDataConfig.getUsrDataConfig().getLength());
