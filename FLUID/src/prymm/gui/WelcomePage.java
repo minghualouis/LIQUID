@@ -179,7 +179,7 @@ public class WelcomePage extends FluidDefaultPage{
 		gd_comboFluidType.widthHint = 137;
 		comboFluidType.setLayoutData(gd_comboFluidType);
 		comboFluidType.setItems(new String[] {"Water", "Glycerin", "User Defined"});
-		comboFluidType.setText("Select Fluid Type");
+		comboFluidType.setText("Water");
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		Label lblViscosity = new Label(grpFluidSettings, SWT.NONE);
@@ -222,7 +222,7 @@ public class WelcomePage extends FluidDefaultPage{
 		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		barrierShape.setItems(new String[] {"Rectangular", "Circular", "InnerPipe"});
 		barrierShape.setBounds(0, 0, 91, 23);
-		barrierShape.setText("Select Barrier Shape");
+		barrierShape.setText("Circular");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
@@ -231,7 +231,7 @@ public class WelcomePage extends FluidDefaultPage{
 
 		initialForceDirection.setItems(new String[] {"Left", "Right"});
 		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		initialForceDirection.setText("Select Initial Force");
+		initialForceDirection.setText("Right");
 		
 		Label lblInitialSpeed = new Label(grpFluidSettings, SWT.NONE);
 		lblInitialSpeed.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
@@ -246,6 +246,7 @@ public class WelcomePage extends FluidDefaultPage{
 		speedScale.setMaximum(120);
 		speedScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		speedScale.setToolTipText("fluid initial speed");
+		speedScale.setSelection(100);
 		speedText.setText(new DecimalFormat("#.##").format(speedScale.getSelection() * 1.0 / 1000 ));
 		
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
@@ -253,7 +254,7 @@ public class WelcomePage extends FluidDefaultPage{
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
 		containerSize.setItems(new String[] {"325 x 80","200 x 80", "300 x 120"});
 		containerSize.setBounds(0, 0, 91, 23);
-		containerSize.setText("Select Container Size");
+		containerSize.setText("325 x 80");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
@@ -434,12 +435,14 @@ public class WelcomePage extends FluidDefaultPage{
 				containerSize.select(0); // 325 * 80
 				lblViscosity.setEnabled(false); // viscosity label
 				viscosityScale.setEnabled(false); // viscosity scale
+				
 				initialForceDirection.select(1); // initial force : right
 				tempScale.setSelection(50); // temperature
 				btnAddPipeEntry.setEnabled(true); // entry
-				btnAddPipeExit.setEnabled(false);
-				speedScale.setSelection(100);
-				
+				btnAddPipeExit.setEnabled(false); // exit
+				speedScale.setSelection(100); // speed
+				speedText.setText(new DecimalFormat("#.##").format(speedScale.getSelection() * 1.0 / 1000 ));
+				tempText.setText(tempScale.getSelection() + "");
 				initalFlow();
 			}
 		});

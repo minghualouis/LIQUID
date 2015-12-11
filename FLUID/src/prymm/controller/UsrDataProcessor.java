@@ -1,6 +1,7 @@
 package prymm.controller;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import prymm.model.Driver;
@@ -9,7 +10,9 @@ import prymm.model.Fluid;
 import prymm.model.FluidFactory;
 import prymm.model.LogWriter;
 import prymm.model.RenderingMachine;
+
 import java.io.*;
+
 import prymm.model.SingleDrop;
 
 
@@ -111,8 +114,11 @@ public class UsrDataProcessor
 		if(StateController.getCurrentState() == StateController.RUNNING || StateController.getCurrentState() == StateController.PAUSE)
 		{
 			StateController.setCurrentState(StateController.TERMINAL);
-			Thread simThread = threadSet.iterator().next();
+			Iterator<Thread> threadIterator = threadSet.iterator();
+			Thread simThread = threadIterator.next();
+			Thread logThread = threadIterator.next();
 			simThread.interrupt();
+			logThread.interrupt();
 			threadSet.removeAll(threadSet);
 		}
 	}
@@ -289,7 +295,8 @@ public class UsrDataProcessor
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
+						Thread.currentThread().interrupt(); // very important
+				        break;
 					}
 					LogWriter.writeLog(currentFlow);
 				}
@@ -297,7 +304,10 @@ public class UsrDataProcessor
 			}
 			
 		});
+		writeLogThread.setName("LogThread");
+		threadSet.add(writeLogThread);
 		writeLogThread.start();
+		
 	}
 
 	private static Flow initializeFlow(UsrDataConfig dataConfig)
