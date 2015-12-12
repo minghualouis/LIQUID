@@ -1,7 +1,0 @@
-Viscosity 1
-x 659	
-y 290
-Barrier Rectangular
-initialForce Left
-InitialSpeed 10
-Temperature 30
