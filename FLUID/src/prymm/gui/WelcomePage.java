@@ -474,7 +474,7 @@ public class WelcomePage extends FluidDefaultPage{
 					        File fileCreate = SaveAs.getSelectedFile();
 					        try {
 					        	 fileCreate.createNewFile();
-					            fr = new FileReader("D:\\log.txt");
+					            fr = new FileReader(".\\log.txt");
 					            fw = new FileWriter(SaveAs.getSelectedFile());
 					            int c = fr.read();
 					            while(c!=-1) {
@@ -488,7 +488,7 @@ public class WelcomePage extends FluidDefaultPage{
 					                  if (fr != null && fw != null) {
 					                      fr.close();
 					                      fw.close();
-					                      File f = new File("D:\\log.txt");
+					                      File f = new File(".\\log.txt");
 								          f.delete();
 					                  }
 					              } catch(IOException e) {
