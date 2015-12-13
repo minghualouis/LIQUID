@@ -612,6 +612,7 @@ public class WelcomePage extends FluidDefaultPage{
 					// enable viscosity widgets
 					viscosityScale.setEnabled(true);
 					viscoText.setEnabled(true);
+					lblViscosity.setEnabled(true);
 					usrcDataConfig.setFluidType(comboFluidType.getText());
 					
 				}
