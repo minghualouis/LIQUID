@@ -404,17 +404,46 @@ public class WelcomePage extends FluidDefaultPage{
 					{
 						File replayFile = new File(replayFileName);
 						if (replayFile.exists()) 
-						{   //R:Initate running while pressing run with selected log file
-							try 
+						{
+							String currentButton = runButton.getText();
+							if(currentButton.trim().equals("Run"))
 							{
-								UsrDataProcessor.processUsrData();
-							} 
-							catch (Exception e)
-							{
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+								runButton.setText("Pause");
+								if(!stopButton.isEnabled())
+								{
+									stopButton.setEnabled(true);
+								}
+								if(resetButton.isEnabled())
+								{
+									resetButton.setEnabled(false);
+								}
+								// not allowing user to configure during execution
+								grpFluidSettings.setEnabled(false);
+								try 
+								{
+									
+									UsrDataProcessor.processUsrData();
+								} 
+								catch (Exception e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							}
-							//use log file for replay
+							else if (currentButton.trim().equals("Pause")) 
+							{
+								runButton.setText("Continue");
+								// pause current thread
+								UsrDataProcessor.pauseExecution();
+							}
+							
+							else if (currentButton.trim().equals("Continue")) 
+							{
+								runButton.setText("Pause");
+								// pause current thread
+								UsrDataProcessor.continueExecution();
+							}
+			
 						}
 					}
 				}
