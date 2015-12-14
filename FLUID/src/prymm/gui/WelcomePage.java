@@ -138,30 +138,7 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		Composite userControlComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		userControlComp.setLayout(new GridLayout(1, false));
-		
-		Group grpLogReplay = new Group(userControlComp, SWT.NONE);
-		grpLogReplay.setLayout(new GridLayout(5, false));
-		GridData gd_grpLogReplay = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_grpLogReplay.heightHint = 30;
-		grpLogReplay.setLayoutData(gd_grpLogReplay);
-		grpLogReplay.setText("Log / SIM Replay");
-		grpLogReplay.setBounds(0, 0, 70, 82);
-		new Label(grpLogReplay, SWT.NONE);
-		
-		getLogButton = new Button(grpLogReplay, SWT.NONE);
-		
-		getLogButton.setEnabled(false);
-		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		getLogButton.setText("Get Log");
-			
-		new Label(grpLogReplay, SWT.NONE);
-		
-		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
-		btnBrowseFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
-		btnBrowseFile.setText("Browse File For Replay");
-				
-		fileText = new Text(grpLogReplay, SWT.BORDER);
-		fileText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 
 		
 		Group grpFluidSettings = new Group(userControlComp, SWT.NONE);
@@ -298,6 +275,30 @@ public class WelcomePage extends FluidDefaultPage{
 		resetButton.setLayoutData(new RowData(100, SWT.DEFAULT));
 		resetButton.setText("Reset");
 
+		
+		Group grpLogReplay = new Group(userControlComp, SWT.NONE);
+		grpLogReplay.setLayout(new GridLayout(5, false));
+		GridData gd_grpLogReplay = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_grpLogReplay.heightHint = 30;
+		grpLogReplay.setLayoutData(gd_grpLogReplay);
+		grpLogReplay.setText("Log / SIM Replay");
+		grpLogReplay.setBounds(0, 0, 70, 82);
+		new Label(grpLogReplay, SWT.NONE);
+		
+		getLogButton = new Button(grpLogReplay, SWT.NONE);
+		
+		getLogButton.setEnabled(false);
+		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		getLogButton.setText("Get Log");
+			
+		new Label(grpLogReplay, SWT.NONE);
+		
+		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
+		btnBrowseFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		btnBrowseFile.setText("Browse File For Replay");
+				
+		fileText = new Text(grpLogReplay, SWT.BORDER);
+		fileText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		/**
 		 * Event define area
@@ -594,9 +595,10 @@ public class WelcomePage extends FluidDefaultPage{
 			public void widgetSelected(SelectionEvent arg0) 
 			{
 				//0.005-0.200 -> [5-200] -> [1,40]
-				double currentViscosity = viscosityScale.getSelection() * 5.0 / 1000;
+				double currentViscosity = viscosityScale.getSelection() * 500.0 / 1000;
 				viscoText.setText(String.format("%.3f", currentViscosity));
-				usrcDataConfig.setViscosity(viscosityScale.getSelection() + "");
+				//minghua added ,viscosity updated
+				usrcDataConfig.setViscosity(String.format("%.3f", currentViscosity));
 			}	
 		});
 		
@@ -615,6 +617,10 @@ public class WelcomePage extends FluidDefaultPage{
 					lblViscosity.setEnabled(true);
 					usrcDataConfig.setFluidType(comboFluidType.getText());
 					
+					double currentViscosity = viscosityScale.getSelection() * 500.0 / 1000;
+					//minghua added ,viscosity updated
+					viscoText.setText(String.format("%.3f", currentViscosity));
+					usrcDataConfig.setViscosity(String.format("%.3f", currentViscosity));
 				}
 				else 
 				{
