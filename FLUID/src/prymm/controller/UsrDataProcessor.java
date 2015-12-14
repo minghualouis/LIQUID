@@ -141,8 +141,9 @@ public class UsrDataProcessor
 	 */
 	public static void replay()
 	{
-		//Radhika:Changed state check to idle from initial
-		if(StateController.getCurrentState() == StateController.IDLE)
+		//R: :Changed state check to idle from initial
+		//R: :Added terminal state as well because browse file is enabled in terminal state
+		if(StateController.getCurrentState() == StateController.IDLE|| StateController.getCurrentState() == StateController.TERMINAL)
 		{
 			UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
 			retriveForReplay(usrData);
@@ -163,15 +164,15 @@ public class UsrDataProcessor
 				BufferedReader br = null; // buffered for readLine()
 				try {
 				    String s;
-				    String a[]=new String[10];
+				    String a[]=new String[100];
 				    int i = 0 ;
-					//ins = new FileInputStream("C:\\Users\\parth\\Desktop\\radhika.txt");
-				    ins = new FileInputStream(usrData.getReplayPath()); 
+					ins = new FileInputStream(usrData.getReplayPath()); 
 				    r = new InputStreamReader(ins, "UTF-8"); // leave charset out for default
 				    br = new BufferedReader(r);
-				    
-				    while ((s = br.readLine()) != null) {
-				    	 String[] columns = s.split(" ");
+				    s = br.readLine();//R: :Added to skip first line with no config info
+				    while (i<9) {//R: :Changed as need to read only configuration
+				    	s = br.readLine();
+				    	 String[] columns = s.split(" : ");//R: :Changed to support new log format
 				    	 
 				    	if(Driver.DEBUG == true){
 				    		System.out.println(columns[0] + "  " + columns[1]);
@@ -179,31 +180,45 @@ public class UsrDataProcessor
 				        a[i] = columns[1];
 				        i++;
 				    }
-									
-				    usrData.setViscosity(a[0]);
-				    usrData.setLength(Integer.parseInt(a[1]));
-				    usrData.setWidth(Integer.parseInt(a[2]));
-				    usrData.setBarrierShape(a[3]);
-				    //usrData.setContainerSize(a[4]);
-				    //usrData.setFluidType(a[5]);
+				    									
+				    //usrData.setViscosity(a[0]);
+				    usrData.setLength(Integer.parseInt(a[0]));
+				    usrData.setWidth(Integer.parseInt(a[1]));
+				    usrData.setTemperature((a[2]));
+				    usrData.setFluidType(a[3]);
+				    usrData.setBarrierShape(a[4]);
+				    usrData.setInitialSpeed(a[5]);
 				    usrData.setInitialForce(a[6]);
-				    usrData.setInitialSpeed(a[7]);
-				    usrData.setTemperature(a[8]);
+				    if ("true".equals(a[7]))
+				    usrData.setEntryAdded(true);
+				    else
+				    usrData.setEntryAdded(false);
+				    if ("true".equals(a[8]))	
+				    usrData.setExitAdded(true);
+				    else
+				    usrData.setExitAdded(false);
+				    	
+				    
+				    
 				    
 				    // minghua added start
 				    // create an int value storing # of all flowmeters read from log file
 				    // create 2 int[] array1, array2, one to put the x value, another to put y value
-				    for (int j = 0; j < flowmeterNum; j++) {
-						
-				    	initialFlow.getAllDrops()[array1[j]][array2[j]].isFlowMeter = true;
-					}
+//				    for (int j = 0; j < flowmeterNum; j++) {
+//						
+//				    	initialFlow.getAllDrops()[array1[j]][array2[j]].isFlowMeter = true;
+//					}
 				    // minghua added end
 				    
 				    //System.out.println("Viscosity after set is "+usrData.getViscosity());
-				   // System.out.println("Length after set is "+UsrDataConfig.getUsrDataConfig().getLength());
-				    //System.out.println("Width after set is "+UsrDataConfig.getUsrDataConfig().getWidth());
-					
-					   
+//				    System.out.println("Length after set is "+UsrDataConfig.getUsrDataConfig().getLength());
+//				    System.out.println("Width after set is "+UsrDataConfig.getUsrDataConfig().getWidth());
+//				    System.out.println("Temperature after set is "+UsrDataConfig.getUsrDataConfig().getTemperature());
+//				    System.out.println("Fluid after set is "+UsrDataConfig.getUsrDataConfig().getFluidType());
+//				    System.out.println("Barrier after set is "+UsrDataConfig.getUsrDataConfig().getBarrierShape());
+//				    System.out.println("Speed after set is "+UsrDataConfig.getUsrDataConfig().getInitialSpeed());
+//				    System.out.println("force after set is "+UsrDataConfig.getUsrDataConfig().getInitialForce());
+				       
 					   
 				}
 				catch (Exception e)
@@ -229,7 +244,7 @@ public class UsrDataProcessor
 		int yDim = usrData.getWidth(); // second parameter of flow
 		double temperature = Double.valueOf(usrData.getTemperature());
 		String fluidType = usrData.getFluidType();
-
+		
 		
 		fluidObj = FluidFactory.getFluid(fluidType, temperature);
 		initialFlow.updateFlow(xDim, yDim, fluidObj);
@@ -250,6 +265,11 @@ public class UsrDataProcessor
 		int yDim = usrData.getWidth(); // second parameter of flow
 		double temperature = Double.valueOf(usrData.getTemperature());
 		String fluidType = usrData.getFluidType();
+		String barrier = usrData.getBarrierShape() ;
+		String initSpeed = usrData.getInitialSpeed();
+		String initForce = usrData.getInitialForce();
+	    boolean pipeEntry = usrData.isEntryAdded();
+	    boolean pipeExit = usrData.isExitAdded();
 		File fileName = new File(".\\log.txt");
 		if(fileName.exists())
 		{
@@ -269,12 +289,17 @@ public class UsrDataProcessor
 	    		 fileName.createNewFile();
 	    		}
 	        outFile = new PrintWriter( new BufferedWriter(new FileWriter(fileName,true)));
-	        outFile.println("****************************************************************");
-	        outFile.println("x-Dimension : " + xDim);
-	        outFile.println("y-Dimension : " + yDim);
-	        outFile.println("Temperature : " + temperature);
-	        outFile.println("Fluid type : " + fluidType);
-	        outFile.println("****************************************************************");
+	        outFile.println("*****************************CONFIGURATION SETTINGS**************************");
+	        outFile.println("x-Dimension    : " + xDim);
+	        outFile.println("y-Dimension    : " + yDim);
+	        outFile.println("Temperature    : " + temperature);
+	        outFile.println("Fluid type     : " + fluidType);
+	        outFile.println("Barrier Shape  : " + barrier);
+	        outFile.println("Initial Speed  : " + initSpeed);
+	        outFile.println("Initial Force  : " + initForce);
+	        outFile.println("Pipe at Entry? : " + pipeEntry);
+	        outFile.println("Pipe at Exit?  : " + pipeExit);
+	        outFile.println("***********************BREAKPOINTS AND FLOWMETER READINGS********************");
 	        outFile.println();
 	        outFile.flush();
 	     } catch (IOException ex) {
