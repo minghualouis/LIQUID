@@ -81,6 +81,7 @@ public class WelcomePage extends FluidDefaultPage{
 	 */
 	private void initalFlow()
 	{
+		//Just for git test
 
 		/**
 		 * Should also update these configuration in UI
