@@ -14,7 +14,7 @@ public class Glycerin extends Fluid
 	{
 		super(temperature);
 		type = "Glycerin";
-		viscosity = 12100*Math.exp((-1233+temperature)*temperature/(9900+70*temperature));
+		viscosity = 30*1.790*Math.exp((-1230-temperature)*temperature/(36100+360*temperature));
 	}
 
 }

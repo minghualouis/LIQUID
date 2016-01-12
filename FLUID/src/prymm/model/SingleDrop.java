@@ -30,6 +30,15 @@ public class SingleDrop
 	 */
 	private SingleDot[][] dots = new SingleDot[3][3];
 	
+	public boolean isFlowMeter = false;
+	
+	public void setFlowMeter(boolean isFlowMeter) {
+		this.isFlowMeter = isFlowMeter;
+	}
+
+	private int xIndex;
+	private int yIndex;
+	
 	public SingleDrop()
 	{
 		this.isEnable = true;
@@ -42,6 +51,22 @@ public class SingleDrop
 		}
 	}
 	
+	public int getxIndex() {
+		return xIndex;
+	}
+
+	public void setxIndex(int xIndex) {
+		this.xIndex = xIndex;
+	}
+
+	public int getyIndex() {
+		return yIndex;
+	}
+
+	public void setyIndex(int yIndex) {
+		this.yIndex = yIndex;
+	}
+
 	/**
 	 * disable the drop, used for setting barrier
 	 */
@@ -94,6 +119,11 @@ public class SingleDrop
 
 	public void setDots(SingleDot[][] dots) {
 		this.dots = dots;
+	}
+
+	public boolean isFlowMeter() {
+		// TODO Auto-generated method stub
+		return isFlowMeter;
 	}
 	
 	

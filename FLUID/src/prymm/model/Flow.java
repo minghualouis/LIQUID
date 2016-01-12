@@ -1,5 +1,7 @@
 package prymm.model;
 
+import java.util.LinkedList;
+
 import prymm.controller.UsrDataConfig;
 
 /**
@@ -183,7 +185,27 @@ public class Flow
 		return true;
 	}
 
-
+	public LinkedList<SingleDrop> getFlowMeters()
+	{
+		LinkedList<SingleDrop> flowMeters = new LinkedList<SingleDrop>();
+		SingleDrop[][] allDrops = this.getAllDrops();
+		for(int i = 0; i < allDrops.length; i ++)
+		{
+			for(int j = 0; j < allDrops[0].length; j ++)
+			{
+				if(allDrops[i][j].isFlowMeter)
+				{
+					allDrops[i][j].setxIndex(i);
+					allDrops[i][j].setyIndex(j);
+					flowMeters.add(allDrops[i][j]);
+					
+				}
+			}
+		}
+		return flowMeters;
+	}
+	
+	
 	public int getxDim() {
 		return xDim;
 	}

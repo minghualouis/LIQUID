@@ -1,7 +1,12 @@
 package prymm.gui;
 /**Testing**/
+import java.io.*;
+import java.awt.event.MouseAdapter;
 import java.io.File;
 import java.sql.Driver;
+import java.text.DecimalFormat;
+
+import javax.swing.JFileChooser;
 
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -24,6 +29,8 @@ import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Scale;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -88,11 +95,11 @@ public class WelcomePage extends FluidDefaultPage{
 		 */
 		usrcDataConfig = UsrDataConfig.getUsrDataConfig();
 		// barrier setting
-		usrcDataConfig.setBarrierShape("Rectangular");
+		usrcDataConfig.setBarrierShape("Circular");
 		// container size setting
-		usrcDataConfig.setContainerSize("659 x 290");
+		usrcDataConfig.setContainerSize("325 x 80");
 		// pipe entry selected?
-		usrcDataConfig.setEntryAdded(false);
+		usrcDataConfig.setEntryAdded(true);
 		// pipe exit selected?
 		usrcDataConfig.setExitAdded(false);
 		// fluid type
@@ -103,7 +110,7 @@ public class WelcomePage extends FluidDefaultPage{
 //		{
 //			usrcDataConfig.setViscosity(String.valueOf(viscosityScale.getSelection()));
 //		}
-		usrcDataConfig.setInitialForce("Left");
+		usrcDataConfig.setInitialForce("Right");
 		//speedScale.getSelection()
 		usrcDataConfig.setInitialSpeed("0.1");
 		usrcDataConfig.setTemperature("50");
@@ -132,30 +139,7 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		Composite userControlComp = new Composite(shlFluidDynamicSimulation, SWT.NONE);
 		userControlComp.setLayout(new GridLayout(1, false));
-		
-		Group grpLogReplay = new Group(userControlComp, SWT.NONE);
-		grpLogReplay.setLayout(new GridLayout(5, false));
-		GridData gd_grpLogReplay = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
-		gd_grpLogReplay.heightHint = 30;
-		grpLogReplay.setLayoutData(gd_grpLogReplay);
-		grpLogReplay.setText("Log / SIM Replay");
-		grpLogReplay.setBounds(0, 0, 70, 82);
-		new Label(grpLogReplay, SWT.NONE);
-		
-		getLogButton = new Button(grpLogReplay, SWT.NONE);
-		
-		getLogButton.setEnabled(false);
-		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
-		getLogButton.setText("Get Log");
-			
-		new Label(grpLogReplay, SWT.NONE);
-		
-		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
-		btnBrowseFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
-		btnBrowseFile.setText("Browse File For Replay");
-				
-		fileText = new Text(grpLogReplay, SWT.BORDER);
-		fileText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+
 
 		
 		Group grpFluidSettings = new Group(userControlComp, SWT.NONE);
@@ -173,7 +157,7 @@ public class WelcomePage extends FluidDefaultPage{
 		gd_comboFluidType.widthHint = 137;
 		comboFluidType.setLayoutData(gd_comboFluidType);
 		comboFluidType.setItems(new String[] {"Water", "Glycerin", "User Defined"});
-		comboFluidType.setText("Select Fluid Type");
+		comboFluidType.setText("Water");
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		Label lblViscosity = new Label(grpFluidSettings, SWT.NONE);
@@ -183,7 +167,9 @@ public class WelcomePage extends FluidDefaultPage{
 		
 		viscoText = new Text(grpFluidSettings, SWT.BORDER);
 		viscoText.setEnabled(false);
-		viscoText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_viscoText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_viscoText.widthHint = 24;
+		viscoText.setLayoutData(gd_viscoText);
 		
 		viscosityScale = new Scale(grpFluidSettings, SWT.NONE);
 		viscosityScale.setMaximum(40);
@@ -212,43 +198,47 @@ public class WelcomePage extends FluidDefaultPage{
 		barrierShape = new Combo(grpFluidSettings, SWT.NONE);
 
 		barrierShape.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		barrierShape.setItems(new String[] {"Rectangular", "Circular"});
+		barrierShape.setItems(new String[] {"Rectangular", "Circular", "InnerPipe"});
 		barrierShape.setBounds(0, 0, 91, 23);
-		barrierShape.setText("Select Barrier Shape");
+		barrierShape.setText("Circular");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		initialForceDirection = new Combo(grpFluidSettings, SWT.NONE);
 
-		initialForceDirection.setItems(new String[] {"Left", "Right", "Top", "Bottom"});
+		initialForceDirection.setItems(new String[] {"Left", "Right"});
 		initialForceDirection.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		initialForceDirection.setText("Select Initial Force");
+		initialForceDirection.setText("Right");
 		
 		Label lblInitialSpeed = new Label(grpFluidSettings, SWT.NONE);
 		lblInitialSpeed.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false, 1, 1));
 		lblInitialSpeed.setText("Initial Speed");
 		
 		speedText = new Text(grpFluidSettings, SWT.BORDER);
-		speedText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1));
+		GridData gd_speedText = new GridData(SWT.FILL, SWT.CENTER, false, false, 1, 1);
+		gd_speedText.widthHint = 20;
+		speedText.setLayoutData(gd_speedText);
 		
 		Scale speedScale = new Scale(grpFluidSettings, SWT.NONE);
 		speedScale.setMaximum(120);
 		speedScale.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false, 1, 1));
 		speedScale.setToolTipText("fluid initial speed");
-		speedText.setText(speedScale.getSelection() + "");
+		speedScale.setSelection(100);
+		speedText.setText(new DecimalFormat("#.##").format(speedScale.getSelection() * 1.0 / 1000 ));
 		
 		containerSize = new Combo(grpFluidSettings, SWT.NONE);
 
 		containerSize.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true, 1, 1));
-		containerSize.setItems(new String[] {"659 x 290","200 x 80", "300 x 120", "600 x 240"});
+		containerSize.setItems(new String[] {"325 x 80","200 x 80", "300 x 120"});
 		containerSize.setBounds(0, 0, 91, 23);
-		containerSize.setText("Select Container Size");
+		containerSize.setText("325 x 80");
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
 		btnAddPipeEntry = new Button(grpFluidSettings, SWT.CHECK);
+		btnAddPipeEntry.setSelection(true);
 
 		btnAddPipeEntry.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, false, true, 1, 1));
 		btnAddPipeEntry.setText("Add Pipe Entry");
@@ -260,7 +250,6 @@ public class WelcomePage extends FluidDefaultPage{
 		new Label(grpFluidSettings, SWT.NONE);
 		new Label(grpFluidSettings, SWT.NONE);
 		
-
 
 		
 		Group grpControlPanel = new Group(userControlComp, SWT.NONE);
@@ -287,6 +276,30 @@ public class WelcomePage extends FluidDefaultPage{
 		resetButton.setLayoutData(new RowData(100, SWT.DEFAULT));
 		resetButton.setText("Reset");
 
+		
+		Group grpLogReplay = new Group(userControlComp, SWT.NONE);
+		grpLogReplay.setLayout(new GridLayout(5, false));
+		GridData gd_grpLogReplay = new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1);
+		gd_grpLogReplay.heightHint = 30;
+		grpLogReplay.setLayoutData(gd_grpLogReplay);
+		grpLogReplay.setText("Log / SIM Replay");
+		grpLogReplay.setBounds(0, 0, 70, 82);
+		new Label(grpLogReplay, SWT.NONE);
+		
+		getLogButton = new Button(grpLogReplay, SWT.NONE);
+		
+		getLogButton.setEnabled(false);
+		getLogButton.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, true, 1, 1));
+		getLogButton.setText("Get Log");
+			
+		new Label(grpLogReplay, SWT.NONE);
+		
+		btnBrowseFile = new Button(grpLogReplay, SWT.NONE);
+		btnBrowseFile.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, true, false, 1, 1));
+		btnBrowseFile.setText("Browse File For Replay");
+				
+		fileText = new Text(grpLogReplay, SWT.BORDER);
+		fileText.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 		
 		/**
 		 * Event define area
@@ -315,6 +328,10 @@ public class WelcomePage extends FluidDefaultPage{
 						replayBox.setMessage("Replay file path is " + resultFile + "\nReplay mode is selected. Configuration of fluid is not allowed");
 						replayBox.open();
 						grpFluidSettings.setEnabled(false);
+						//R:Set replay file path
+						UsrDataConfig usrData = UsrDataConfig.getUsrDataConfig();
+						usrData.setReplayPath(resultFile);
+						UsrDataProcessor.replay();
 					}
 				}
 			}
@@ -357,6 +374,7 @@ public class WelcomePage extends FluidDefaultPage{
 						grpFluidSettings.setEnabled(false);
 						try 
 						{
+							
 							UsrDataProcessor.processUsrData();
 						} 
 						catch (Exception e)
@@ -388,7 +406,45 @@ public class WelcomePage extends FluidDefaultPage{
 						File replayFile = new File(replayFileName);
 						if (replayFile.exists()) 
 						{
-//							use log file for replay
+							String currentButton = runButton.getText();
+							if(currentButton.trim().equals("Run"))
+							{
+								runButton.setText("Pause");
+								if(!stopButton.isEnabled())
+								{
+									stopButton.setEnabled(true);
+								}
+								if(resetButton.isEnabled())
+								{
+									resetButton.setEnabled(false);
+								}
+								// not allowing user to configure during execution
+								grpFluidSettings.setEnabled(false);
+								try 
+								{
+									
+									UsrDataProcessor.processUsrData();
+								} 
+								catch (Exception e)
+								{
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+							else if (currentButton.trim().equals("Pause")) 
+							{
+								runButton.setText("Continue");
+								// pause current thread
+								UsrDataProcessor.pauseExecution();
+							}
+							
+							else if (currentButton.trim().equals("Continue")) 
+							{
+								runButton.setText("Pause");
+								// pause current thread
+								UsrDataProcessor.continueExecution();
+							}
+			
 						}
 					}
 				}
@@ -405,6 +461,19 @@ public class WelcomePage extends FluidDefaultPage{
 			{
 				grpFluidSettings.setEnabled(true);
 				fileText.setText("");
+				comboFluidType.select(0); // water
+				barrierShape.select(1); // circular
+				containerSize.select(0); // 325 * 80
+				lblViscosity.setEnabled(false); // viscosity label
+				viscosityScale.setEnabled(false); // viscosity scale
+				
+				initialForceDirection.select(1); // initial force : right
+				tempScale.setSelection(50); // temperature
+				btnAddPipeEntry.setEnabled(true); // entry
+				btnAddPipeExit.setEnabled(false); // exit
+				speedScale.setSelection(100); // speed
+				speedText.setText(new DecimalFormat("#.##").format(speedScale.getSelection() * 1.0 / 1000 ));
+				tempText.setText(tempScale.getSelection() + "");
 				initalFlow();
 			}
 		});
@@ -414,7 +483,7 @@ public class WelcomePage extends FluidDefaultPage{
 		/**
 		 * Get log button, if system state is STOP and log file is created and exist, this button should be enabled
 		 */
-		getLogButton.setEnabled(true);
+		getLogButton.setEnabled(false);
 		getLogButton.addSelectionListener(new SelectionAdapter() 
 		{
 			@Override
@@ -423,14 +492,41 @@ public class WelcomePage extends FluidDefaultPage{
 				
 				if (getLogButton.isEnabled()) 
 				{
-					FileDialog logFileDialog = new FileDialog(shlFluidDynamicSimulation, SWT.SAVE);
-					logFileDialog.setFilterNames(new String[]{"Log Files", "All Files (*.*)"});
-					logFileDialog.setFilterExtensions(new String[] {"*.log", "*.*"});
-//					logFileDialog.setFilterPath("c:\\");
-					logFileDialog.setFileName("FluidLog.log");
-					String fullName = logFileDialog.open();
+					final JFileChooser SaveAs = new JFileChooser();
+				      SaveAs.setApproveButtonText("Save");
+				      int actionDialog = SaveAs.showOpenDialog(null);
+				      if (actionDialog != JFileChooser.APPROVE_OPTION) {
+				         return;
+				      }
 					
-					// Output the log accoring to fullName
+					if(SaveAs.getSelectedFile() != null) {
+						    FileReader fr = null;
+					        FileWriter fw = null;
+					        File fileCreate = SaveAs.getSelectedFile();
+					        try {
+					        	 fileCreate.createNewFile();
+					            fr = new FileReader(".\\log.txt");
+					            fw = new FileWriter(SaveAs.getSelectedFile());
+					            int c = fr.read();
+					            while(c!=-1) {
+					                fw.write(c);
+					                c = fr.read();
+					            }
+					        } catch(IOException e) {
+					            e.printStackTrace();
+					        } finally {
+					        	  try {
+					                  if (fr != null && fw != null) {
+					                      fr.close();
+					                      fw.close();
+					                      File f = new File(".\\log.txt");
+								          f.delete();
+					                  }
+					              } catch(IOException e) {
+					                  //...
+					              }	        	 
+					        }
+					}
 					
 				}
 			}
@@ -447,9 +543,17 @@ public class WelcomePage extends FluidDefaultPage{
 				if(stopButton.isEnabled() )
 				{
 					UsrDataProcessor.stopExecution();
+					getLogButton.setEnabled(true);
 					if (runButton.isEnabled()) 
 					{
-						runButton.setEnabled(false);
+						// updated by minghua
+						// letting user re-configure the simulation
+						runButton.setText("Run");
+						runButton.setEnabled(true);
+						getLogButton.setEnabled(true);
+						resetButton.setEnabled(true);
+						grpFluidSettings.setEnabled(true);
+//						canvas.setBackground(display.getSystemColor(SWT.COLOR_LIST_SELECTION));
 					}
 				}
 			}
@@ -500,11 +604,12 @@ public class WelcomePage extends FluidDefaultPage{
 			public void widgetSelected(SelectionEvent arg0) 
 			{
 				//0.000-0.120 -> [0,120]
-//				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
-//				speedText.setText(String.format("%.3f", currentSelectedSpeed));
-				int currentSelectedSpeed = speedScale.getSelection();
-				speedText.setText(currentSelectedSpeed + "");
-				usrcDataConfig.setViscosity(speedScale.getSelection() + "");
+				double currentSelectedSpeed = speedScale.getSelection() * 1.0 / 1000;
+				String currentspeedText = new DecimalFormat("#.##").format(currentSelectedSpeed);
+				speedText.setText(currentspeedText);
+//				int currentSelectedSpeed = speedScale.getSelection();
+//				speedText.setText(currentSelectedSpeed + "");
+				usrcDataConfig.setInitialSpeed(currentspeedText);
 			}
 		});
 		
@@ -520,9 +625,10 @@ public class WelcomePage extends FluidDefaultPage{
 			public void widgetSelected(SelectionEvent arg0) 
 			{
 				//0.005-0.200 -> [5-200] -> [1,40]
-				double currentViscosity = viscosityScale.getSelection() * 5.0 / 1000;
+				double currentViscosity = viscosityScale.getSelection() * 500.0 / 1000;
 				viscoText.setText(String.format("%.3f", currentViscosity));
-				usrcDataConfig.setViscosity(viscosityScale.getSelection() + "");
+				//minghua added ,viscosity updated
+				usrcDataConfig.setViscosity(String.format("%.3f", currentViscosity));
 			}	
 		});
 		
@@ -538,8 +644,13 @@ public class WelcomePage extends FluidDefaultPage{
 					// enable viscosity widgets
 					viscosityScale.setEnabled(true);
 					viscoText.setEnabled(true);
+					lblViscosity.setEnabled(true);
 					usrcDataConfig.setFluidType(comboFluidType.getText());
 					
+					double currentViscosity = viscosityScale.getSelection() * 500.0 / 1000;
+					//minghua added ,viscosity updated
+					viscoText.setText(String.format("%.3f", currentViscosity));
+					usrcDataConfig.setViscosity(String.format("%.3f", currentViscosity));
 				}
 				else 
 				{
@@ -626,5 +737,20 @@ public class WelcomePage extends FluidDefaultPage{
 		});
 		
 		
+		fluidDisplayComp.addMouseListener(new org.eclipse.swt.events.MouseAdapter() {
+
+			@Override
+			public void mouseDown(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+//				System.out.println(arg0.x);
+//				System.out.println(arg0.y);
+				double x = arg0.x;
+				double y = arg0.y;
+				double xScale = x / fluidDisplayComp.getBounds().width;
+				double yScale = y / fluidDisplayComp.getBounds().height;
+				UsrDataProcessor.addFlowMeter(xScale, yScale);
+			}
+			
+		});
 	}
 }
